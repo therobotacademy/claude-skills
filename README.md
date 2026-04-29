@@ -20,7 +20,9 @@ Skills are self-contained instructions that extend Claude's capabilities for spe
 
 ### 🤖 Agentic
 
-*Coming soon.*
+| Skill | Description |
+|-------|-------------|
+| [`registro-sesion-claude`](skills/agentic/registro-sesion-claude/) | Captures metrics and scope of a Claude Code session into a structured Markdown file (`USAGE.md`). Triggered by phrases like "registra la sesión", "documenta esta sesión", or pasting `/usage` output. |
 
 ---
 
