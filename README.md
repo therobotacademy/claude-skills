@@ -21,7 +21,6 @@ Skills are self-contained instructions that extend Claude's capabilities for spe
 |-------|-------------|
 | [`authorship-validator`](skills/content/authorship-validator/) | Validates human authorship of an article before publishing using the VIDAL framework (VIVO / INTERVENIDO / DELEGADO / GHOST). Detects friction signals vs. LLM homogeneity and produces specific rewrite recommendations. Requires personal calibration with your own reference texts. |
 | [`voice-refiner`](skills/content/voice-refiner/) | Iteratively refines an article until it reaches ≥85% human authorship confidence and ≤2 AI-flagged phrases. Operates in autonomous mode (Model A) or author-reviewed mode (Model B). Depends on `authorship-validator`. |
-| [`fitz-as-pure-llm`](skills/content/fitz-as-pure-llm/) | Persona context loader for COIIAOC and Udemy course sessions. Injects Bernardo's instructor role, the T-HORNO-04 industrial scenario, and the PRDA / IO-RE frameworks. Does not activate FITZ forensic analysis — use `fitz-agent-auditor` for that. |
 
 ### 🤖 Agentic
 
