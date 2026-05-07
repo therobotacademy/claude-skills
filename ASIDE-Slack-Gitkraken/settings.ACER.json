@@ -1,0 +1,259 @@
+{
+	"model": "sonnet",
+	"hooks": {
+		"ConfigChange": [
+			{
+				"hooks": [
+					{
+						"command": "\"C:/Users/Bernardo/AppData/Local/GitKrakenCLI/gk.exe\" ai hook run --host claude-code",
+						"type":    "command"
+					}
+				],
+				"matcher": ""
+			}
+		],
+		"CwdChanged": [
+			{
+				"hooks": [
+					{
+						"command": "\"C:/Users/Bernardo/AppData/Local/GitKrakenCLI/gk.exe\" ai hook run --host claude-code",
+						"type":    "command"
+					}
+				],
+				"matcher": ""
+			}
+		],
+		"Elicitation": [
+			{
+				"hooks": [
+					{
+						"command": "\"C:/Users/Bernardo/AppData/Local/GitKrakenCLI/gk.exe\" ai hook run --host claude-code",
+						"type":    "command"
+					}
+				],
+				"matcher": ""
+			}
+		],
+		"ElicitationResult": [
+			{
+				"hooks": [
+					{
+						"command": "\"C:/Users/Bernardo/AppData/Local/GitKrakenCLI/gk.exe\" ai hook run --host claude-code",
+						"type":    "command"
+					}
+				],
+				"matcher": ""
+			}
+		],
+		"InstructionsLoaded": [
+			{
+				"hooks": [
+					{
+						"command": "\"C:/Users/Bernardo/AppData/Local/GitKrakenCLI/gk.exe\" ai hook run --host claude-code",
+						"type":    "command"
+					}
+				],
+				"matcher": ""
+			}
+		],
+		"Notification": [
+			{
+				"hooks": [
+					{
+						"command": "\"C:/Users/Bernardo/AppData/Local/GitKrakenCLI/gk.exe\" ai hook run --host claude-code",
+						"type":    "command"
+					}
+				],
+				"matcher": ""
+			}
+		],
+		"PermissionDenied": [
+			{
+				"hooks": [
+					{
+						"command": "\"C:/Users/Bernardo/AppData/Local/GitKrakenCLI/gk.exe\" ai hook run --host claude-code",
+						"type":    "command"
+					}
+				],
+				"matcher": ""
+			}
+		],
+		"PermissionRequest": [
+			{
+				"hooks": [
+					{
+						"command": "\"C:/Users/Bernardo/AppData/Local/GitKrakenCLI/gk.exe\" ai hook run --host claude-code",
+						"type":    "command"
+					}
+				],
+				"matcher": ""
+			}
+		],
+		"PostCompact": [
+			{
+				"hooks": [
+					{
+						"command": "\"C:/Users/Bernardo/AppData/Local/GitKrakenCLI/gk.exe\" ai hook run --host claude-code",
+						"type":    "command"
+					}
+				],
+				"matcher": ""
+			}
+		],
+		"PostToolUse": [
+			{
+				"hooks": [
+					{
+						"command": "\"C:/Users/Bernardo/AppData/Local/GitKrakenCLI/gk.exe\" ai hook run --host claude-code",
+						"type":    "command"
+					}
+				],
+				"matcher": ""
+			}
+		],
+		"PostToolUseFailure": [
+			{
+				"hooks": [
+					{
+						"command": "\"C:/Users/Bernardo/AppData/Local/GitKrakenCLI/gk.exe\" ai hook run --host claude-code",
+						"type":    "command"
+					}
+				],
+				"matcher": ""
+			}
+		],
+		"PreCompact": [
+			{
+				"hooks": [
+					{
+						"command": "\"C:/Users/Bernardo/AppData/Local/GitKrakenCLI/gk.exe\" ai hook run --host claude-code",
+						"type":    "command"
+					}
+				],
+				"matcher": ""
+			}
+		],
+		"PreToolUse": [
+			{
+				"hooks": [
+					{
+						"command": "\"C:/Users/Bernardo/AppData/Local/GitKrakenCLI/gk.exe\" ai hook run --host claude-code",
+						"type":    "command"
+					}
+				],
+				"matcher": ""
+			}
+		],
+		"SessionEnd": [
+			{
+				"hooks": [
+					{
+						"command": "\"C:/Users/Bernardo/AppData/Local/GitKrakenCLI/gk.exe\" ai hook run --host claude-code",
+						"type":    "command"
+					}
+				],
+				"matcher": ""
+			}
+		],
+		"SessionStart": [
+			{
+				"hooks": [
+					{
+						"command": "\"C:/Users/Bernardo/AppData/Local/GitKrakenCLI/gk.exe\" ai hook run --host claude-code",
+						"type":    "command"
+					}
+				],
+				"matcher": ""
+			}
+		],
+		"Stop": [
+			{
+				"hooks": [
+					{
+						"command": "\"C:/Users/Bernardo/AppData/Local/GitKrakenCLI/gk.exe\" ai hook run --host claude-code",
+						"type":    "command"
+					},
+					{
+						"type":   "mcp_tool",
+						"server": "claude_ai_Slack",
+						"tool":   "slack_send_message",
+						"input": {
+							"channel": "#notifications",
+							"text":    "✅ Claude ha terminado"
+						}
+					}
+				],
+				"matcher": ""
+			}
+		],
+		"StopFailure": [
+			{
+				"hooks": [
+					{
+						"command": "\"C:/Users/Bernardo/AppData/Local/GitKrakenCLI/gk.exe\" ai hook run --host claude-code",
+						"type":    "command"
+					}
+				],
+				"matcher": ""
+			}
+		],
+		"SubagentStart": [
+			{
+				"hooks": [
+					{
+						"command": "\"C:/Users/Bernardo/AppData/Local/GitKrakenCLI/gk.exe\" ai hook run --host claude-code",
+						"type":    "command"
+					}
+				],
+				"matcher": ""
+			}
+		],
+		"SubagentStop": [
+			{
+				"hooks": [
+					{
+						"command": "\"C:/Users/Bernardo/AppData/Local/GitKrakenCLI/gk.exe\" ai hook run --host claude-code",
+						"type":    "command"
+					}
+				],
+				"matcher": ""
+			}
+		],
+		"TaskCompleted": [
+			{
+				"hooks": [
+					{
+						"command": "\"C:/Users/Bernardo/AppData/Local/GitKrakenCLI/gk.exe\" ai hook run --host claude-code",
+						"type":    "command"
+					}
+				],
+				"matcher": ""
+			}
+		],
+		"TeammateIdle": [
+			{
+				"hooks": [
+					{
+						"command": "\"C:/Users/Bernardo/AppData/Local/GitKrakenCLI/gk.exe\" ai hook run --host claude-code",
+						"type":    "command"
+					}
+				],
+				"matcher": ""
+			}
+		],
+		"UserPromptSubmit": [
+			{
+				"hooks": [
+					{
+						"command": "\"C:/Users/Bernardo/AppData/Local/GitKrakenCLI/gk.exe\" ai hook run --host claude-code",
+						"type":    "command"
+					}
+				],
+				"matcher": ""
+			}
+		]
+	},
+	"autoUpdatesChannel":                "latest",
+	"skipDangerousModePermissionPrompt": true,
+	"theme":                             "light"
+}
