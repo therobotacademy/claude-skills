@@ -23,6 +23,18 @@ Si el navegador no abre automáticamente:
 
 Sigue el flujo de autorización OAuth en el navegador.
 
+Esto añade la siguiente entrada en el fichero de settings de Claude `.claude` del proyecto:
+
+```json
+{
+  ... ,
+  "enabledPlugins": {
+    "slack@claude-plugins-official": true
+  }
+}
+```
+
+
 ## Configuración del hook
 
 El hook vive en `~/.claude/settings.json` (configuración global de usuario), dentro del evento `Stop`:

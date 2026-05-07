@@ -250,5 +250,8 @@
 	},
 	"autoUpdatesChannel":                "latest",
 	"skipDangerousModePermissionPrompt": true,
-	"theme":                             "light"
+	"theme":                             "light",
+	"enabledPlugins": {
+		"slack@claude-plugins-official": true
+	}
 }
