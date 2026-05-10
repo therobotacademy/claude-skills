@@ -14,6 +14,7 @@ Skills are self-contained instructions that extend Claude's capabilities for spe
 |-------|-------------|
 | [`repo-reconciler`](skills/dev/repo-reconciler/) | Audits a repository for inconsistencies between code and documentation — detects undocumented features, stale README sections, broken examples, and version drift. Generates ready-to-apply patches. |
 | [`fitz-agent-auditor`](skills/dev/fitz-agent-auditor/) | Forensic analysis of AI agent outputs using the FITZ taxonomy (SALUDABLE / ALUCINACIÓN / INYECCIÓN / DRIFT). Detects hallucination, prompt injection, and role drift. Produces a verdict, detected signals, and an operational recommendation to prevent recurrence. |
+| [`log-turn`](skills/dev/log-turn/) | Automatically appends every conversation turn to `sessions/today-LOG.md` in a structured `## Prompt N: <Title>` / `## Response N` format. Always active by default; switches to on-demand mode only if the user explicitly requests it in the current session. |
 
 ### ✍️ Content
 
