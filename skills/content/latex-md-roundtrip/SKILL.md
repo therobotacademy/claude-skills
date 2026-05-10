@@ -84,70 +84,21 @@ Then audit the produced MD against `SOURCE_TEX` and **inject raw-LaTeX blocks** 
 
 After the baseline is curated, run `check_roundtrip.sh` (S3) to validate. Treat the baseline as **read-only** thereafter.
 
-### Step S3 — Generate `check_roundtrip.sh`
+### Step S3 — Materialize `check_roundtrip.sh` from the skill template
 
-Write a script next to the project (e.g. `SCRIPTS/check_roundtrip.sh` or wherever the user requests) with the user's paths baked in:
+The canonical script lives in the skill at `assets/check_roundtrip.template.sh`. Read it, substitute the placeholders `{{SOURCE_TEX}}`, `{{BASELINE_MD}}`, `{{TEMPLATE_TEX}}` with the user's paths, and write the result to a project location (default: `SCRIPTS/check_roundtrip.sh`; ask the user if `SCRIPTS/` doesn't exist). Make it executable.
 
-```bash
-#!/usr/bin/env bash
-# Validates that BASELINE_MD round-trips cleanly to LaTeX.
-set -euo pipefail
-ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
-cd "$ROOT"
+After writing, run it once. The diff must be empty or trivial. **Any content drift means the baseline has a leak; fix the baseline (add more raw-LaTeX blocks) and re-run before proceeding.**
 
-SOURCE_TEX="<SOURCE_TEX>"
-BASELINE_MD="<BASELINE_MD>"
-TEMPLATE_TEX="<TEMPLATE_TEX>"
-TMP_TEX="$(mktemp --suffix=.tex)"
+### Step S4 — Materialize `regen.sh` from the skill template
 
-pandoc "$BASELINE_MD" \
-  --from=markdown \
-  --to=latex \
-  --natbib \
-  --template="$TEMPLATE_TEX" \
-  -o "$TMP_TEX"
+The canonical script lives in the skill at `assets/regen.template.sh`. Read it, substitute `{{EDIT_MD}}`, `{{OUTPUT_TEX}}`, `{{TEMPLATE_TEX}}`, `{{SOURCE_TEX}}` with the user's paths, and write to the project (default: `SCRIPTS/regen.sh`). Make it executable.
 
-echo "==== Diff: SOURCE_TEX vs round-tripped baseline ===="
-diff -u "$SOURCE_TEX" "$TMP_TEX" || true
-echo "==== End diff ===="
-echo
-echo "Acceptable drift: whitespace; option ordering inside \\usepackage{} groups."
-echo "NOT acceptable: missing \\label, missing \\caption, lost \\resizebox,"
-echo "                math display reflow, content reordering, lost commands."
-```
+The script accepts an optional first positional argument that overrides `OUTPUT_TEX` for one run — this is how the user picks a content-driven output name each cycle (e.g. `bash SCRIPTS/regen.sh paper/main-tighten-abstract.tex`) without editing the script.
 
-Run it once after S2. The diff must be empty or trivial. **Any content drift means the baseline has a leak; fix the baseline (add more raw-LaTeX blocks) and re-run before proceeding.**
+### About the templates (hybrid model)
 
-### Step S4 — Generate `regen.sh` (per-cycle generator)
-
-```bash
-#!/usr/bin/env bash
-# Regenerates OUTPUT_TEX from EDIT_MD and produces the review diff vs SOURCE_TEX.
-set -euo pipefail
-ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
-cd "$ROOT"
-
-EDIT_MD="<EDIT_MD>"
-OUTPUT_TEX="<OUTPUT_TEX>"
-TEMPLATE_TEX="<TEMPLATE_TEX>"
-SOURCE_TEX="<SOURCE_TEX>"
-
-pandoc "$EDIT_MD" \
-  --from=markdown \
-  --to=latex \
-  --natbib \
-  --template="$TEMPLATE_TEX" \
-  -o "$OUTPUT_TEX"
-
-diff -u "$SOURCE_TEX" "$OUTPUT_TEX" > "${OUTPUT_TEX}.diff" || true
-
-echo "Generated: $OUTPUT_TEX"
-echo "Review diff: ${OUTPUT_TEX}.diff"
-echo
-echo "NEXT: open the diff and verify every hunk traces to a planned edit."
-echo "      Unplanned hunks are either Pandoc drift (patch $OUTPUT_TEX manually)"
-echo "      or accidental edits (revert in $EDIT_MD)."
-```
+The scripts are **case-specific** (paths baked in, ride with the project repo so collaborators and CI can run them without the skill), but the **template** is a single source of truth inside the skill. When the skill's template is updated (e.g. to handle a new Pandoc behavior, or to add a flag), re-running setup against an existing project regenerates the project's scripts from the new template. To re-materialize without redoing S1/S2, the user can ask: *"refresh the round-trip scripts from the current templates"* — the skill substitutes paths and overwrites the project's `check_roundtrip.sh` / `regen.sh`, leaving baseline and template `.tex` untouched.
 
 ### Step S5 — Seed the edit target
 
@@ -234,7 +185,8 @@ Acceptable invocations from the user:
 
 - "Set up the round-trip pipeline" / "initialize round-trip for `<source.tex>`" → run setup S1–S5 (ask for any missing paths first).
 - "Check round-trip" / "verify roundtrip" → run `check_roundtrip.sh`.
-- "Regenerate the LaTeX" / "generate the edited version as `<name>.tex`" → run the per-edit cycle (steps 3–6) with `OUTPUT_TEX` set to the requested name.
+- "Regenerate the LaTeX" / "generate the edited version as `<name>.tex`" → run the per-edit cycle (steps 3–6) with `OUTPUT_TEX` set to the requested name (passed as `regen.sh`'s first argument).
+- "Refresh the round-trip scripts" → re-substitute paths into the skill's templates and overwrite the project's `check_roundtrip.sh` / `regen.sh`. Leaves baseline/template `.tex` alone.
 - "Upload to Overleaf" → verify steps 3–6 completed cleanly, then list the file paths to upload.
 
 When the skill runs, output one short status line per executed step and surface the diff path/summary at the end. Do not paste the diff body unless asked.

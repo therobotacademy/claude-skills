@@ -30,7 +30,9 @@ The four pieces of infrastructure, generated once per project from user-supplied
 1. **A frozen template** — the preamble of the source `.tex` extracted verbatim, plus a `$body$` marker. Pandoc only generates the body; the preamble is never touched.
 2. **A round-trip-safe baseline MD** — a re-generated MD mirror of the source where every construct Pandoc can't represent natively (tables with `\multirow`, `\resizebox`, `\label`s, abstract environment, complex figures) lives as a raw-LaTeX block inside the MD, not as Markdown.
 3. **A check script** (`check_roundtrip.sh`) — converts the baseline MD back to LaTeX with the frozen template and diffs against the source. Must be empty or whitespace/option-ordering noise. Anything else means the baseline has a leak — the baseline is fixed, not the source.
-4. **A regen script** (`regen.sh`) — the per-cycle generator. Takes the edit-target MD, produces the output LaTeX file (named by content, not by version), and emits a diff against the source as the **review unit** before upload.
+4. **A regen script** (`regen.sh`) — the per-cycle generator. Takes the edit-target MD, produces the output LaTeX file (named by content, not by version), and emits a diff against the source as the **review unit** before upload. Accepts a per-run output name as its first argument so one `regen.sh` serves many edit cycles.
+
+**Hybrid script ownership.** The canonical script logic lives in the skill (`assets/check_roundtrip.template.sh`, `assets/regen.template.sh`); setup substitutes the user's paths and materializes per-project copies. The project's scripts ride with the repo (collaborators and CI can run them without the skill), but updates to the skill's templates can be re-substituted into existing projects on demand (`"refresh the round-trip scripts"`).
 
 ## The reversibility contract
 
@@ -109,8 +111,8 @@ After confirmation it runs S1–S5 and reports:
 S1  extracted preamble (47 lines) → paper/template.tex
 S2  generated baseline → paper/main-baseline.md
     injected 4 raw-LaTeX blocks: abstract, table:results, table:hyperparams, figure:arch
-S3  wrote SCRIPTS/check_roundtrip.sh
-S4  wrote SCRIPTS/regen.sh
+S3  materialized SCRIPTS/check_roundtrip.sh from assets/check_roundtrip.template.sh
+S4  materialized SCRIPTS/regen.sh from assets/regen.template.sh
 S5  seeded paper/main-edit.md from paper/main-baseline.md
     ran check_roundtrip.sh → 0 content diffs (12 whitespace lines, OK)
 ```
@@ -123,10 +125,10 @@ Edit `paper/main-edit.md` in your editor (or have Claude edit it). When ready, a
 > Regenerate the LaTeX as paper/main-tighten-abstract.tex
 ```
 
-The skill patches `regen.sh` for this run's `OUTPUT_TEX` and executes:
+The skill runs `regen.sh` with the content-driven name as its first argument (no script edit needed):
 
 ```
-$ bash SCRIPTS/regen.sh
+$ bash SCRIPTS/regen.sh paper/main-tighten-abstract.tex
 Generated: paper/main-tighten-abstract.tex
 Review diff: paper/main-tighten-abstract.tex.diff (38 lines, 4 hunks)
 ```
@@ -153,10 +155,10 @@ Upload `paper/main-tighten-abstract.tex` (and `refs.bib` if it changed) to Overl
 Same edit-target MD, a different content-driven output name describing the next change:
 
 ```
-> Regenerate as paper/main-add-related-work.tex
+$ bash SCRIPTS/regen.sh paper/main-add-related-work.tex
 ```
 
-The baseline, template, and `EDIT_MD` stay the same. The output name describes this round's content. The diff file (`paper/main-add-related-work.tex.diff`) is again the review unit.
+The baseline, template, scripts, and `EDIT_MD` stay the same. The output name describes this round's content. The diff file (`paper/main-add-related-work.tex.diff`) is again the review unit.
 
 ## What this skill does NOT do
 
@@ -169,6 +171,8 @@ The baseline, template, and `EDIT_MD` stay the same. The output name describes t
 
 - `SKILL.md` — full operational spec: setup steps S1–S5, per-edit-cycle workflow, parameter contract, discipline rules, risk pockets, failure modes, invocation patterns.
 - `README.md` — this file.
+- `assets/check_roundtrip.template.sh` — canonical validation script. Placeholders `{{SOURCE_TEX}}`, `{{BASELINE_MD}}`, `{{TEMPLATE_TEX}}` substituted at setup.
+- `assets/regen.template.sh` — canonical per-cycle generator. Placeholders `{{EDIT_MD}}`, `{{OUTPUT_TEX}}`, `{{TEMPLATE_TEX}}`, `{{SOURCE_TEX}}` substituted at setup; per-run output name overrides via `$1`.
 
 ## Trigger phrases
 
