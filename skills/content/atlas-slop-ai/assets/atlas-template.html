@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><!-- @TITLE --></title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FAFAF7;
+  --bg2:#F1F0EA;
+  --bg3:#E5E3D8;
+  --tx:#1A1A1A;
+  --tx2:#5C5A4F;
+  --tx3:#9A9789;
+  --rule:#D4D1C4;
+  --paper:#FFFFFF;
+  --ink:#0F0F0F;
+
+  --q-ai-slop:#8C2020;
+  --q-ai-slop-bg:#F7ECEC;
+  --q-ai-good:#0A5A3F;
+  --q-ai-good-bg:#EAF1ED;
+  --q-hum-slop:#8A4808;
+  --q-hum-slop-bg:#F8EFE3;
+  --q-hum-good:#1E2A8C;
+  --q-hum-good-bg:#ECEEF7;
+
+  --r:4px;
+  --rl:8px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Sans',sans-serif;font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+
+.wrap{max-width:1240px;margin:0 auto;padding:2rem 1.5rem 5rem}
+
+.masthead{
+  border-bottom:1px solid var(--ink);
+  padding-bottom:1.5rem;
+  margin-bottom:2rem;
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:end;
+  gap:1.5rem;
+}
+.kicker{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--tx3);
+  margin-bottom:.75rem;
+  display:flex;
+  gap:.75rem;
+  align-items:center;
+}
+.kicker-dot{width:5px;height:5px;border-radius:50%;background:var(--ink);display:inline-block}
+.title{
+  font-family:'IBM Plex Serif',serif;
+  font-size:clamp(36px,5vw,56px);
+  font-weight:400;
+  line-height:.95;
+  letter-spacing:-.02em;
+  margin-bottom:.5rem;
+}
+.title em{font-style:italic;color:var(--tx2)}
+.subtitle{
+  font-family:'IBM Plex Serif',serif;
+  font-style:italic;
+  font-size:16px;
+  color:var(--tx2);
+  max-width:560px;
+}
+.masthead-right{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  color:var(--tx3);
+  text-align:right;
+  letter-spacing:.04em;
+}
+.masthead-right strong{
+  display:block;
+  font-family:'IBM Plex Serif',serif;
+  font-size:24px;
+  font-weight:400;
+  color:var(--tx);
+  letter-spacing:0;
+  margin-top:.25rem;
+}
+
+.def-bar{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0;
+  border:1px solid var(--rule);
+  background:var(--paper);
+  margin-bottom:2rem;
+}
+.def{padding:1rem 1.25rem;border-right:1px solid var(--rule)}
+.def:last-child{border-right:none}
+.def-label{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--tx3);
+  margin-bottom:.4rem;
+}
+.def-text{
+  font-family:'IBM Plex Serif',serif;
+  font-size:13.5px;
+  color:var(--tx2);
+  line-height:1.55;
+}
+.def-text b{color:var(--tx);font-weight:500}
+
+.matrix-section{margin-bottom:2rem}
+.section-head{
+  display:flex;
+  align-items:baseline;
+  gap:1rem;
+  margin-bottom:1rem;
+  border-bottom:1px solid var(--rule);
+  padding-bottom:.5rem;
+}
+.section-num{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  letter-spacing:.1em;
+  color:var(--tx3);
+}
+.section-title{
+  font-family:'IBM Plex Serif',serif;
+  font-size:20px;
+  font-weight:400;
+  letter-spacing:-.01em;
+}
+.section-aside{
+  margin-left:auto;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  letter-spacing:.06em;
+  color:var(--tx3);
+}
+
+.matrix{
+  display:grid;
+  grid-template-columns:auto 1fr 1fr;
+  grid-template-rows:auto 1fr 1fr;
+  gap:1px;
+  background:var(--rule);
+  border:1px solid var(--rule);
+}
+.matrix-cell{background:var(--bg)}
+.matrix-corner{padding:.6rem .8rem;background:var(--bg2)}
+.matrix-corner small{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:9.5px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--tx3);
+  display:block;
+  line-height:1.2;
+}
+.matrix-axis-x{
+  padding:.7rem 1rem;
+  text-align:center;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  background:var(--bg2);
+  color:var(--tx);
+}
+.matrix-axis-y{
+  padding:1rem .7rem;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  background:var(--bg2);
+  color:var(--tx);
+  writing-mode:vertical-rl;
+  transform:rotate(180deg);
+  text-align:center;
+}
+.q-cell{
+  padding:1rem 1.1rem;
+  cursor:pointer;
+  transition:background .15s,transform .15s;
+  position:relative;
+  min-height:120px;
+}
+.q-cell:hover{background:var(--bg2)}
+.q-cell.active{background:var(--paper) !important}
+.q-cell.active::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  border:2px solid var(--ink);
+  pointer-events:none;
+}
+.q-marker{
+  width:10px;
+  height:10px;
+  border-radius:2px;
+  display:inline-block;
+  margin-right:.5rem;
+  vertical-align:middle;
+}
+.q-name{
+  font-family:'IBM Plex Serif',serif;
+  font-size:16px;
+  font-weight:400;
+  margin-bottom:.3rem;
+  display:flex;
+  align-items:center;
+}
+.q-count{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:22px;
+  font-weight:500;
+  color:var(--tx);
+  display:block;
+  margin-bottom:.3rem;
+}
+.q-desc{
+  font-family:'IBM Plex Serif',serif;
+  font-style:italic;
+  font-size:12.5px;
+  color:var(--tx2);
+  line-height:1.5;
+}
+
+.filters{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.4rem;
+  margin-bottom:1.5rem;
+  align-items:center;
+  padding:.75rem 0;
+  border-top:1px solid var(--rule);
+  border-bottom:1px solid var(--rule);
+}
+.filter-label{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--tx3);
+  margin-right:.5rem;
+}
+.fbtn{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  letter-spacing:.04em;
+  padding:.4rem .8rem;
+  background:transparent;
+  border:1px solid var(--rule);
+  color:var(--tx2);
+  cursor:pointer;
+  transition:all .12s;
+  border-radius:var(--r);
+}
+.fbtn:hover{border-color:var(--tx2);color:var(--tx)}
+.fbtn.on{
+  background:var(--ink);
+  color:var(--bg);
+  border-color:var(--ink);
+}
+.fsep{width:1px;height:18px;background:var(--rule);margin:0 .35rem}
+.search{
+  margin-left:auto;
+  padding:.4rem .7rem;
+  border:1px solid var(--rule);
+  background:var(--paper);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  width:220px;
+  color:var(--tx);
+  border-radius:var(--r);
+}
+.search:focus{outline:none;border-color:var(--ink)}
+
+.empty{
+  text-align:center;
+  padding:3rem 1rem;
+  font-family:'IBM Plex Serif',serif;
+  font-style:italic;
+  color:var(--tx3);
+}
+.article{
+  display:grid;
+  grid-template-columns:60px 1fr;
+  gap:1.25rem;
+  padding:1.25rem 0;
+  border-bottom:1px solid var(--rule);
+  position:relative;
+  align-items:start;
+}
+.article:hover{background:linear-gradient(to right,var(--bg2) 0,transparent 80%)}
+.art-rail{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  color:var(--tx3);
+  letter-spacing:.04em;
+  text-align:right;
+  padding-top:.2rem;
+  line-height:1.5;
+}
+.art-rail .date{display:block;color:var(--tx)}
+.art-rail .time{display:block;font-size:9.5px;margin-top:1px}
+.art-source{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--tx2);
+  margin-bottom:.3rem;
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  flex-wrap:wrap;
+}
+.art-title{
+  font-family:'IBM Plex Serif',serif;
+  font-size:18px;
+  font-weight:400;
+  letter-spacing:-.005em;
+  line-height:1.3;
+  color:var(--tx);
+  margin-bottom:.4rem;
+}
+.art-abstract{
+  font-family:'IBM Plex Serif',serif;
+  font-size:13.5px;
+  color:var(--tx2);
+  line-height:1.6;
+  margin-bottom:.6rem;
+  max-width:780px;
+}
+.art-tags{
+  display:flex;
+  gap:.4rem;
+  flex-wrap:wrap;
+  align-items:center;
+  margin-bottom:.5rem;
+}
+.tag{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:9.5px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  padding:.18rem .5rem;
+  border-radius:2px;
+  display:inline-flex;
+  align-items:center;
+  gap:.3rem;
+}
+.tag-ai{background:var(--q-ai-good-bg);color:var(--q-ai-good);border:1px solid var(--q-ai-good)}
+.tag-human{background:var(--bg2);color:var(--tx2);border:1px solid var(--rule)}
+.tag-slop{background:var(--q-ai-slop-bg);color:var(--q-ai-slop);border:1px solid var(--q-ai-slop)}
+.tag-real{background:var(--q-hum-good-bg);color:var(--q-hum-good);border:1px solid var(--q-hum-good)}
+.tag-quad{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:9.5px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  padding:.18rem .55rem;
+  border-radius:2px;
+  font-weight:500;
+  color:var(--paper);
+}
+.art-rationale{
+  font-family:'IBM Plex Serif',serif;
+  font-style:italic;
+  font-size:12.5px;
+  color:var(--tx2);
+  line-height:1.55;
+  padding:.6rem .85rem;
+  background:var(--bg2);
+  border-left:2px solid var(--ink);
+  margin-bottom:.5rem;
+  max-width:780px;
+}
+.art-rationale b{
+  font-style:normal;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--tx);
+  display:block;
+  margin-bottom:.2rem;
+  font-weight:500;
+}
+.art-link{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10.5px;
+  letter-spacing:.05em;
+  color:var(--tx2);
+  text-decoration:none;
+  border-bottom:1px solid var(--rule);
+  padding-bottom:1px;
+  transition:all .12s;
+}
+.art-link:hover{color:var(--ink);border-bottom-color:var(--ink)}
+
+.article[data-quad="ai-slop"]{border-left:3px solid var(--q-ai-slop);padding-left:.75rem;margin-left:-.75rem}
+.article[data-quad="ai-good"]{border-left:3px solid var(--q-ai-good);padding-left:.75rem;margin-left:-.75rem}
+.article[data-quad="hum-slop"]{border-left:3px solid var(--q-hum-slop);padding-left:.75rem;margin-left:-.75rem}
+.article[data-quad="hum-good"]{border-left:3px solid var(--q-hum-good);padding-left:.75rem;margin-left:-.75rem}
+
+.q-marker.ai-slop,.tag-quad.ai-slop{background:var(--q-ai-slop)}
+.q-marker.ai-good,.tag-quad.ai-good{background:var(--q-ai-good)}
+.q-marker.hum-slop,.tag-quad.hum-slop{background:var(--q-hum-slop)}
+.q-marker.hum-good,.tag-quad.hum-good{background:var(--q-hum-good)}
+
+.foot{
+  margin-top:3rem;
+  padding-top:1rem;
+  border-top:1px solid var(--ink);
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  color:var(--tx3);
+  letter-spacing:.06em;
+}
+
+@media(max-width:760px){
+  .masthead{grid-template-columns:1fr}
+  .masthead-right{text-align:left}
+  .matrix{grid-template-columns:auto 1fr 1fr}
+  .def-bar{grid-template-columns:1fr}
+  .def{border-right:none;border-bottom:1px solid var(--rule)}
+  .article{grid-template-columns:1fr}
+  .art-rail{text-align:left}
+  .search{margin-left:0;width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="masthead">
+  <div class="masthead-left">
+    <div class="kicker">
+      <span>Forensic content audit</span>
+      <span class="kicker-dot"></span>
+      <span>v1.0</span>
+      <span class="kicker-dot"></span>
+      <span><!-- @MASTHEAD_DATE --></span>
+    </div>
+    <h1 class="title">Slop <em>Atlas</em></h1>
+    <p class="subtitle">Inspección bidimensional de la digest. Cruce de dos preguntas independientes: <b>¿lo escribió una IA?</b> y <b>¿tiene tesis propia?</b></p>
+  </div>
+  <div class="masthead-right">
+    Total artículos
+    <strong id="total-count">—</strong>
+    <!-- @SOURCE_LABEL -->
+  </div>
+</header>
+
+<div class="def-bar">
+  <div class="def">
+    <div class="def-label">Eje horizontal · Producción</div>
+    <div class="def-text">¿El texto fue producido con asistencia evidente de IA? Señales: badge IA del digest, autores conocidos por workflow IA-first, transparencia declarada del autor, o estilo característico de generación.</div>
+  </div>
+  <div class="def">
+    <div class="def-label">Eje vertical · Sustancia</div>
+    <div class="def-text"><b>Slop</b> = técnicamente correcto pero cognitivamente vacío: sin fricción, sin contradicción productiva, intercambiable con cualquier otro artículo del género. <b>No-slop</b> = argumento irreemplazable, datos propios, tesis con fricción.</div>
+  </div>
+</div>
+
+<section class="matrix-section">
+  <div class="section-head">
+    <span class="section-num">§ 01</span>
+    <h2 class="section-title">Matriz de cuadrantes</h2>
+    <span class="section-aside">click para filtrar · click activo = limpiar</span>
+  </div>
+
+  <div class="matrix" id="matrix">
+    <div class="matrix-cell matrix-corner">
+      <small>Producción →</small>
+      <small style="margin-top:.3rem">↓ Sustancia</small>
+    </div>
+    <div class="matrix-cell matrix-axis-x">Producido por humano</div>
+    <div class="matrix-cell matrix-axis-x">Producido con IA</div>
+
+    <div class="matrix-cell matrix-axis-y">No-Slop · tesis propia</div>
+    <div class="matrix-cell q-cell" data-q="hum-good">
+      <span class="q-name"><span class="q-marker hum-good"></span>Humano · No-Slop</span>
+      <span class="q-count" id="count-hum-good">0</span>
+      <div class="q-desc">El ideal. Argumento irremplazable, datos primarios, voz editorial detectable.</div>
+    </div>
+    <div class="matrix-cell q-cell" data-q="ai-good">
+      <span class="q-name"><span class="q-marker ai-good"></span>IA · No-Slop</span>
+      <span class="q-count" id="count-ai-good">0</span>
+      <div class="q-desc">IA usada como herramienta, no como autor. Hay tesis. Fricción humana en curaduría o encuadre.</div>
+    </div>
+
+    <div class="matrix-cell matrix-axis-y">Slop · sin fricción</div>
+    <div class="matrix-cell q-cell" data-q="hum-slop">
+      <span class="q-name"><span class="q-marker hum-slop"></span>Humano · Slop</span>
+      <span class="q-count" id="count-hum-slop">0</span>
+      <div class="q-desc">Slop premaquinal. Listicles de wellness, <i>moats</i> genéricos, "N pasos para X".</div>
+    </div>
+    <div class="matrix-cell q-cell" data-q="ai-slop">
+      <span class="q-name"><span class="q-marker ai-slop"></span>IA · Slop</span>
+      <span class="q-count" id="count-ai-slop">0</span>
+      <div class="q-desc">El caso paradigmático. Producción automatizada de contenido sin tesis. Volumen sin sustancia.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-head">
+    <span class="section-num">§ 02</span>
+    <h2 class="section-title">Inspección</h2>
+    <span class="section-aside" id="result-count">— artículos visibles</span>
+  </div>
+
+  <div class="filters">
+    <span class="filter-label">Cuadrante</span>
+    <button class="fbtn on" data-filter="all">Todos</button>
+    <span class="fsep"></span>
+    <button class="fbtn" data-filter="hum-good">Hum · No-Slop</button>
+    <button class="fbtn" data-filter="ai-good">IA · No-Slop</button>
+    <button class="fbtn" data-filter="hum-slop">Hum · Slop</button>
+    <button class="fbtn" data-filter="ai-slop">IA · Slop</button>
+    <span class="fsep"></span>
+    <span class="filter-label">Eje</span>
+    <button class="fbtn" data-axis="ai">Solo IA</button>
+    <button class="fbtn" data-axis="slop">Solo Slop</button>
+    <input class="search" id="search" type="text" placeholder="filtrar texto…">
+  </div>
+
+  <div class="articles" id="articles"></div>
+
+  <div class="foot">
+    <span id="footer-source"><!-- @SOURCE_LABEL --></span>
+    <span>Análisis editorial · slop-atlas v1.0</span>
+  </div>
+</section>
+
+</div>
+
+<script>
+// ═══════════ DATA ═══════════
+// Generated by slop-atlas skill. Each article: id, date, time, source, title, abstract, ai (bool), slop (bool), rationale, url
+const ARTICLES = [
+<!-- @ARTICLES_DATA -->
+];
+
+// ═══════════ HELPERS ═══════════
+function quadrantOf(a){
+  if(a.ai && a.slop)return"ai-slop";
+  if(a.ai && !a.slop)return"ai-good";
+  if(!a.ai && a.slop)return"hum-slop";
+  return"hum-good";
+}
+function quadrantLabel(q){
+  return{"ai-slop":"IA · Slop","ai-good":"IA · No-Slop","hum-slop":"Humano · Slop","hum-good":"Humano · No-Slop"}[q];
+}
+
+// ═══════════ STATE ═══════════
+let activeFilter="all";
+let activeAxis=null;
+let searchTerm="";
+
+// ═══════════ INIT ═══════════
+function init(){
+  const counts={"ai-slop":0,"ai-good":0,"hum-slop":0,"hum-good":0};
+  ARTICLES.forEach(a=>counts[quadrantOf(a)]++);
+  document.getElementById("count-ai-slop").textContent=counts["ai-slop"];
+  document.getElementById("count-ai-good").textContent=counts["ai-good"];
+  document.getElementById("count-hum-slop").textContent=counts["hum-slop"];
+  document.getElementById("count-hum-good").textContent=counts["hum-good"];
+  document.getElementById("total-count").textContent=ARTICLES.length;
+
+  document.querySelectorAll("[data-q]").forEach(cell=>{
+    cell.addEventListener("click",()=>{
+      const q=cell.dataset.q;
+      if(activeFilter===q){activeFilter="all"}
+      else{activeFilter=q;activeAxis=null}
+      syncUI();
+    });
+  });
+
+  document.querySelectorAll("[data-filter]").forEach(b=>{
+    b.addEventListener("click",()=>{
+      activeFilter=b.dataset.filter;
+      activeAxis=null;
+      syncUI();
+    });
+  });
+
+  document.querySelectorAll("[data-axis]").forEach(b=>{
+    b.addEventListener("click",()=>{
+      if(activeAxis===b.dataset.axis){activeAxis=null}
+      else{activeAxis=b.dataset.axis;activeFilter="all"}
+      syncUI();
+    });
+  });
+
+  document.getElementById("search").addEventListener("input",e=>{
+    searchTerm=e.target.value.toLowerCase();
+    render();
+  });
+
+  syncUI();
+}
+
+function syncUI(){
+  document.querySelectorAll("[data-q]").forEach(c=>{
+    c.classList.toggle("active",c.dataset.q===activeFilter);
+  });
+  document.querySelectorAll("[data-filter]").forEach(b=>{
+    b.classList.toggle("on",b.dataset.filter===activeFilter && !activeAxis);
+  });
+  document.querySelectorAll("[data-axis]").forEach(b=>{
+    b.classList.toggle("on",b.dataset.axis===activeAxis);
+  });
+  render();
+}
+
+function passes(a){
+  const q=quadrantOf(a);
+  if(activeFilter!=="all" && q!==activeFilter)return false;
+  if(activeAxis==="ai" && !a.ai)return false;
+  if(activeAxis==="slop" && !a.slop)return false;
+  if(searchTerm){
+    const blob=(a.title+" "+a.source+" "+a.abstract+" "+a.rationale).toLowerCase();
+    if(!blob.includes(searchTerm))return false;
+  }
+  return true;
+}
+
+function render(){
+  const list=document.getElementById("articles");
+  const visible=ARTICLES.filter(passes);
+  document.getElementById("result-count").textContent=`${visible.length} de ${ARTICLES.length} artículos visibles`;
+
+  if(visible.length===0){
+    list.innerHTML=`<div class="empty">— sin artículos en esta selección —</div>`;
+    return;
+  }
+
+  list.innerHTML=visible.map(a=>{
+    const q=quadrantOf(a);
+    const aiTag=a.ai
+      ?`<span class="tag tag-ai">⌬ Producido con IA</span>`
+      :`<span class="tag tag-human">✎ Humano</span>`;
+    const slopTag=a.slop
+      ?`<span class="tag tag-slop">◊ Slop</span>`
+      :`<span class="tag tag-real">▣ No-Slop</span>`;
+    const quadTag=`<span class="tag tag-quad ${q}">${quadrantLabel(q)}</span>`;
+    const link=a.url
+      ?`<a class="art-link" href="${a.url}" target="_blank" rel="noopener">leer artículo →</a>`
+      :`<span class="art-link" style="opacity:.4">— sin enlace directo —</span>`;
+    return `
+      <article class="article" data-quad="${q}">
+        <div class="art-rail">
+          <span class="date">${a.date}</span>
+          <span class="time">${a.time}</span>
+        </div>
+        <div class="art-body">
+          <div class="art-source">${a.source}</div>
+          <h3 class="art-title">${a.title}</h3>
+          <p class="art-abstract">${a.abstract}</p>
+          <div class="art-tags">
+            ${quadTag}
+            ${aiTag}
+            ${slopTag}
+          </div>
+          <div class="art-rationale">
+            <b>Razonamiento</b>
+            ${a.rationale}
+          </div>
+          ${link}
+        </div>
+      </article>`;
+  }).join("");
+}
+
+init();
+</script>
+</body>
+</html>
