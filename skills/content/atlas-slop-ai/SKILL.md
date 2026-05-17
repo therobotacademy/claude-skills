@@ -1,5 +1,5 @@
 ---
-name: slop-atlas
+name: atlas-slop-ai
 description: "Clasifica artículos editoriales en una matriz 2×2 cruzando dos ejes independientes — autoría (humano vs producido con IA) y sustancia (tesis propia vs slop) — para producir un mapa diagnóstico de calidad de contenido. Activa este skill cuando Bernardo pida 'tagear el digest', 'categorizar artículos como slop', 'mapear newsletter en cuadrantes', 'analizar slop de la digest', 'pasa esto por el atlas de slop', o cuando suba un digest editorial (HTML/markdown/lista de URLs) y pida análisis editorial. También actívalo cuando pegue un artículo suelto y pregunte '¿esto es slop?', '¿qué cuadrante?', '¿IA o humano?'. El skill detecta automáticamente el modo de operación: digest completo (input largo con múltiples entradas) o artículo individual (input único). Y detecta el formato de salida pedido: clasificación textual/JSON cuando se pide análisis, HTML interactivo cuando se pide artefacto/explorador/mapa visual."
 ---
 
@@ -196,7 +196,7 @@ Tabla compacta con columnas: `Hora · Fuente · Título · Cuadrante · Razonami
 
 Para generar el HTML interactivo:
 
-1. **Lee la plantilla** una sola vez al inicio: `view /mnt/skills/user/slop-atlas/assets/atlas-template.html`
+1. **Lee la plantilla** una sola vez al inicio: `view /mnt/skills/user/atlas-slop-ai/assets/atlas-template.html`
 2. **Construye el array de datos** con un objeto por artículo:
    ```javascript
    {

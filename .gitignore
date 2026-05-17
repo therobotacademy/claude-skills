@@ -16,3 +16,6 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+
+# Personal reference material (not part of the skill collection)
+ASIDE-Slack-Gitkraken/

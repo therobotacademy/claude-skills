@@ -44,7 +44,7 @@ Skills are self-contained instructions that extend Claude's capabilities for spe
 
 | Skill                                                             | Description                                                                                                                                                                                                  |
 | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [`registro-sesion-claude`](skills/agentic/registro-sesion-claude/) | Captures metrics and scope of a Claude Code session into a structured Markdown file (`USAGE.md`). Triggered by phrases like "registra la sesión", "documenta esta sesión", or pasting `/usage` output. |
+| [`registro-sesion-claude`](skills/agentic/registro-sesion-claude/) | Captures metrics and scope of a Claude Code session into a structured Markdown file (`USAGE.md` or `sessions/{date}-{slug}.md`). Triggered by phrases like "registra la sesión", "documenta esta sesión", or pasting `/usage` output. |
 
 ---
 
@@ -54,7 +54,7 @@ Skills are self-contained instructions that extend Claude's capabilities for spe
 2. In Claude.ai, go to **Settings → Skills** and upload the file.
 3. The skill will be available in all future conversations.
 
-Alternatively, clone this repo and point your Claude Code setup to the `skills/` directory.
+Alternatively, for Claude Code CLI users: copy the skill folder into `~/.claude/skills/`. Each skill folder (`skills/<category>/<skill-name>/`) installs as `~/.claude/skills/<skill-name>/`. Claude Code discovers skills automatically from that directory.
 
 ---
 

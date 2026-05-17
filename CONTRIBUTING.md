@@ -62,7 +62,7 @@ description: >                # When to trigger + what it does. Be specific.
 ## Packaging a skill for release
 
 ```bash
-python scripts/package_skill.py skills/<category>/<skill-name>
+python scripts/package_skill.py skills/<category>/<skill-name> [--output dist/]
 ```
 
-This produces `<skill-name>.skill` in `dist/`, ready to upload as a GitHub Release asset.
+This produces `<skill-name>.skill` in the output directory (default: `dist/`), ready to upload as a GitHub Release asset.
