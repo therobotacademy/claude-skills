@@ -110,10 +110,45 @@ solo el USAGE.md.
 
 ### Fase 5 · Generar el Markdown
 
-Estructura obligatoria:
+#### 5a · Estructura del fichero completo
+
+El `USAGE.md` tiene **dos zonas**:
+
+1. **Cabecera + tabla resumen** — siempre al principio, acumula todas las sesiones.
+2. **Secciones de sesión** — una por sesión, en orden cronológico, debajo de la tabla.
+
+#### 5b · Cabecera y tabla resumen
 
 ```markdown
-# USAGE — {Título de la sesión}
+# USAGE — {Nombre del repo o proyecto}
+
+## Resumen de sesiones
+
+| Fecha      | Sesión                                              |    Coste |         API |       Wall | +líneas | −líneas |  Input | Output |
+| ---------- | --------------------------------------------------- | -------: | ----------: | ---------: | ------: | ------: | -----: | -----: |
+| YYYY-MM-DD | [Título corto de la sesión](#anchor-de-la-seccion)  |   $X.XX  |      Xm Xs  |   Xh Xm Xs |     XXX |     XXX |  XX.Xk |  XX.Xk |
+| **Total**  |                                                     | **$X.XX** | **Xm Xs** |          — | **XXX** | **XXX** | **XX.Xk** | **XX.Xk** |
+```
+
+Reglas de la tabla resumen:
+
+- **Una fila por sesión.** La fila `Total` siempre es la última.
+- **Fecha:** `YYYY-MM-DD`. Si la sesión abarca dos días: `YYYY-MM-DD/DD`.
+- **Sesión:** texto corto (≤80 chars) con link Markdown al anchor de la sección de detalle. El anchor se forma slugificando el título del `# Sesión N` correspondiente (minúsculas, espacios → `-`, caracteres especiales eliminados, `—` → `--`).
+- **Coste, API, Wall:** valores directos de `/usage`.
+- **+líneas / −líneas:** de `git diff --stat` o de la salida de `/usage` (campo `Total code changes`).
+- **Input / Output:** suma agregada de todos los modelos usados en la sesión (en miles, formato `XX.Xk`). Input = suma de columna `input` de todos los modelos. Output = suma de columna `output` de todos los modelos. **No incluir cache read/write aquí.**
+- **Total:** suma de todas las filas. Wall total se omite (—) porque no es aditivo. Líneas y tokens sí se suman.
+- **Alineación:** Coste, API, Wall, +líneas, −líneas, Input, Output → alineados a la derecha (`: ---:`). Fecha y Sesión → izquierda.
+
+#### 5c · Sección de detalle por sesión
+
+Cada sesión tiene su propia sección debajo de la tabla, con este formato:
+
+```markdown
+---
+
+# Sesión N — {Título completo de la sesión}
 
 > _Fecha: YYYY-MM-DD · Rama: {rama} · Estado: {abierta|merged|cerrada}_
 
@@ -131,7 +166,7 @@ Estructura obligatoria:
 
 | Modelo | Input | Output | Cache read | Cache write | Coste |
 |--------|-------|--------|------------|-------------|-------|
-| ... |
+| ...   |       |        |            |             |       |
 
 ---
 
@@ -142,8 +177,8 @@ Estructura obligatoria:
 ### {Fase / sección 1}
 
 - Descripción concreta
-- Ficheros tocados (con enlaces si procede)
-- Decisiones de diseño
+- Ficheros tocados (con enlaces relativos si procede)
+- Decisiones de diseño relevantes
 
 ### {Fase / sección 2}
 
@@ -158,16 +193,26 @@ Estructura obligatoria:
 - Próximo paso recomendado
 ```
 
-Reglas de formato:
+#### 5d · Actualizar un USAGE.md existente
+
+Cuando el fichero ya existe con sesiones anteriores:
+
+1. Leer el fichero completo.
+2. Insertar **una fila nueva** en la tabla resumen, **antes** de la fila `Total`.
+3. Recalcular la fila `Total` sumando todas las filas de sesión.
+4. Mantener el `N` de sesión correlativo (buscar el último `# Sesión N` en el fichero).
+5. Añadir la nueva sección `# Sesión N+1 — ...` al **final** del fichero.
+6. No tocar las secciones de sesiones anteriores.
+
+#### 5e · Reglas de formato generales
 
 - **Tablas para métricas** (no listas con dos puntos).
-- **Una sección por fase** si hay agrupación clara.
+- **Una sección por fase** si hay agrupación clara en los commits.
 - **Enlaces relativos** a los ficheros del repo (`[texto](ruta)`).
-- **Bloques de código** solo cuando reproduces commits o salidas.
+- **Bloques de código** solo cuando reproduces commits o salidas de terminal.
 - **Tono directo**, sin emojis salvo que el repo ya los use.
 - **Sin "we did", "I did"** — voz pasiva o lista de acciones.
-- Si hay tablas anidadas o información dimensional (peso × dimensión,
-  fase × estado), usar tabla, no prosa.
+- Si hay información dimensional (fase × estado, modelo × métrica), usar tabla.
 
 ---
 
