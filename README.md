@@ -28,6 +28,16 @@ Skills are self-contained instructions that extend Claude's capabilities for spe
 | [`obsidian-graph-colors`](skills/content/karpathy-wiki/obsidian-graph-colors/) | Manages color groups in Obsidian's Graph view by reading and writing `graph.json`. Runs an audit script to show current state, detect orphan/missing groups, and flag duplicate hex values. Supports add, change, delete, and bulk color-scheme operations. |
 | [`obsidian-vault-builder`](skills/content/karpathy-wiki/obsidian-vault-builder/) | Creates and configures a complete Obsidian vault (5 `.obsidian/` JSON files) without opening Obsidian. Supports bootstrap from templates (minimal / full / bayesiano), plugin toggling, layout regeneration via `build_workspace.py`, and vault inspection/audit. |
 
+> **karpathy-wiki group** — the three skills above form a layered stack with non-overlapping responsibilities:
+>
+> | Layer | Skill | When to use |
+> |-------|-------|-------------|
+> | 1 · Infrastructure | `obsidian-vault-builder` | Create or reconfigure `.obsidian/` (bootstrap, layout, plugin set) |
+> | 2 · Content | `karpathy-llm-wiki` | Ingest sources, query the wiki, lint broken links and index |
+> | 3 · Visual | `obsidian-graph-colors` | Add, change, or audit Graph view color groups in `graph.json` |
+>
+> Typical order: `obsidian-vault-builder` → `karpathy-llm-wiki` → `obsidian-graph-colors`. Each skill can also run independently once its layer's prerequisites exist.
+
 ### 🤖 Agentic
 
 | Skill | Description |
