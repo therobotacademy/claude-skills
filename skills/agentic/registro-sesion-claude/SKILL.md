@@ -124,10 +124,10 @@ El `USAGE.md` tiene **dos zonas**:
 
 ## Resumen de sesiones
 
-| Fecha      | Sesión                                              |    Coste |         API |       Wall | +líneas | −líneas |  Input | Output |
-| ---------- | --------------------------------------------------- | -------: | ----------: | ---------: | ------: | ------: | -----: | -----: |
-| YYYY-MM-DD | [Título corto de la sesión](#anchor-de-la-seccion)  |   $X.XX  |      Xm Xs  |   Xh Xm Xs |     XXX |     XXX |  XX.Xk |  XX.Xk |
-| **Total**  |                                                     | **$X.XX** | **Xm Xs** |          — | **XXX** | **XXX** | **XX.Xk** | **XX.Xk** |
+| Fecha      | Sesión                                              |    Coste |         API |       Wall | +líneas | −líneas |  Input | Output | Cache read |
+| ---------- | --------------------------------------------------- | -------: | ----------: | ---------: | ------: | ------: | -----: | -----: | ---------: |
+| YYYY-MM-DD | [Título corto de la sesión](#anchor-de-la-seccion)  |   $X.XX  |      Xm Xs  |   Xh Xm Xs |     XXX |     XXX |  XX.Xk |  XX.Xk |     XX.Xk  |
+| **Total**  |                                                     | **$X.XX** | **Xm Xs** |          — | **XXX** | **XXX** | **XX.Xk** | **XX.Xk** | **XX.Xk** |
 ```
 
 Reglas de la tabla resumen:
@@ -137,7 +137,7 @@ Reglas de la tabla resumen:
 - **Sesión:** texto corto (≤80 chars) con link Markdown al anchor de la sección de detalle. El anchor se forma slugificando el título del `# Sesión N` correspondiente (minúsculas, espacios → `-`, caracteres especiales eliminados, `—` → `--`).
 - **Coste, API, Wall:** valores directos de `/usage`.
 - **+líneas / −líneas:** de `git diff --stat` o de la salida de `/usage` (campo `Total code changes`).
-- **Input / Output:** suma agregada de todos los modelos usados en la sesión (en miles, formato `XX.Xk`). Input = suma de columna `input` de todos los modelos. Output = suma de columna `output` de todos los modelos. **No incluir cache read/write aquí.**
+- **Input / Output / Cache read:** suma agregada de todos los modelos usados en la sesión (en miles, formato `XX.Xk`). Input = suma de columna `input`. Output = suma de columna `output`. Cache read = suma de columna `cache_read`. Cache write se omite en la tabla resumen (está disponible en el detalle por modelo).
 - **Total:** suma de todas las filas. Wall total se omite (—) porque no es aditivo. Líneas y tokens sí se suman.
 - **Alineación:** Coste, API, Wall, +líneas, −líneas, Input, Output → alineados a la derecha (`: ---:`). Fecha y Sesión → izquierda.
 
