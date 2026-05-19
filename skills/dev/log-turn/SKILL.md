@@ -19,7 +19,7 @@ Exception: if the user states in the current session something like "only fire o
 
 ## Target file
 
-`sessions/today-LOG.md` (relative to repo root). If the file does not exist, create it. If it exists, append.
+`sessions/today-LOG.md` (relative to repo root). If the file does not exist, create it with a timestamp header as the very first line (see below). If it exists, append.
 
 ## Required format
 
@@ -48,16 +48,27 @@ Rules:
 4. The **bold summary** is the first paragraph of the Response, wrapped in `**...**`. One sentence, declarative, ≤ 30 words. It states what the response did or concluded, not the topic. Example: `**Verifico contra `categorize_st.py `: la discretización es equal-width fija (cortes 4 y 7), no tertile; v2.2 está correcto.**`
 5. The **response body** is the full Claude reply that followed the user prompt in the conversation. Reproduce headings, lists, tables, code blocks verbatim. Do **not** re-derive a summary from scratch — copy what was sent.
 
+## Timestamp header
+
+When creating the file from scratch, write this as the very first line before any turn blocks:
+
+```markdown
+# Session log — YYYY-MM-DD HH:MM
+```
+
+Use the current local date and time (24 h). Example: `# Session log — 2026-05-19 14:37`. Leave one blank line after the header before the first turn block. **Never** inject this header into an existing file.
+
 ## Procedure
 
 1. Read `sessions/today-LOG.md` end-to-end (or check it doesn't exist).
-2. Identify the highest `## Prompt N` heading already in the file — call it `last_logged_N`.
-3. Walk the conversation forward from `last_logged_N + 1` through the current invocation:
+2. If it doesn't exist, create it and write the timestamp header as the first line (see above).
+3. Identify the highest `## Prompt N` heading already in the file — call it `last_logged_N`.
+4. Walk the conversation forward from `last_logged_N + 1` through the current invocation:
    - For each user prompt with a matching assistant response (and which is not yet in the file), append one `## Prompt N: <Title>` / `## Response N` block as specified above. Increment N.
    - The dump invocation itself is the last block appended. Its Response is a short confirmation of what was logged (e.g., `**Anexados Prompts 4–8 al final de `sessions/today-LOG.md `.**` + 1–2 lines of detail).
-4. If a prior turn was interrupted (no assistant response was produced or the assistant only ran tools and stopped), still log the prompt; in the Response section write `_(interrupted — no response delivered)_` or summarize what was attempted before interruption.
-5. **Do not include** system reminders, tool call payloads, or hidden injected context in either the prompt or the response. Only the user-visible prompt text and the user-visible assistant text.
-6. After appending, output a one-sentence confirmation to the user. Do not re-paste the appended content.
+5. If a prior turn was interrupted (no assistant response was produced or the assistant only ran tools and stopped), still log the prompt; in the Response section write `_(interrupted — no response delivered)_` or summarize what was attempted before interruption.
+6. **Do not include** system reminders, tool call payloads, or hidden injected context in either the prompt or the response. Only the user-visible prompt text and the user-visible assistant text.
+7. After appending, output a one-sentence confirmation to the user. Do not re-paste the appended content.
 
 ## Append mechanics
 
