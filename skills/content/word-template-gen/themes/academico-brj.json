@@ -1,0 +1,19 @@
+{
+  "name": "academico-brj",
+  "label": "Académico BRJ — estilo del ebook (Georgia + Arial, rojo tierra)",
+  "body_font": "Georgia",
+  "head_font": "Arial",
+  "css_body_stack": "Georgia, \"Iowan Old Style\", \"Times New Roman\", serif",
+  "css_head_stack": "\"Helvetica Neue\", Arial, system-ui, sans-serif",
+  "palette": {
+    "ink": "#1c1b19",
+    "accent": "#7a3b2e",
+    "muted": "#6b6357",
+    "extra": "#4a6b54",
+    "rule": "#d9d2c7",
+    "bg": "#fbf9f5"
+  },
+  "sizes": { "body": 11.5, "h1": 19, "h2": 14.5, "h3": 12, "title": 26, "subtitle": 14 },
+  "line_spacing": 1.5,
+  "page_margin_cm": 2.0
+}

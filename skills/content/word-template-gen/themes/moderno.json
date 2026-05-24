@@ -1,0 +1,19 @@
+{
+  "name": "moderno",
+  "label": "Moderno — sans (Segoe/Calibri), acento azul, informe limpio",
+  "body_font": "Calibri",
+  "head_font": "Segoe UI",
+  "css_body_stack": "\"Segoe UI\", Calibri, system-ui, sans-serif",
+  "css_head_stack": "\"Segoe UI\", Calibri, system-ui, sans-serif",
+  "palette": {
+    "ink": "#1a1a1a",
+    "accent": "#2563eb",
+    "muted": "#666666",
+    "extra": "#0e7490",
+    "rule": "#e2e2e2",
+    "bg": "#ffffff"
+  },
+  "sizes": { "body": 11, "h1": 20, "h2": 15, "h3": 12.5, "title": 28, "subtitle": 14 },
+  "line_spacing": 1.4,
+  "page_margin_cm": 2.0
+}

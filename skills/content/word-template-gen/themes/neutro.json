@@ -1,0 +1,19 @@
+{
+  "name": "neutro",
+  "label": "Neutro académico — Times, sobrio, interlineado doble",
+  "body_font": "Times New Roman",
+  "head_font": "Times New Roman",
+  "css_body_stack": "\"Times New Roman\", Times, serif",
+  "css_head_stack": "\"Times New Roman\", Times, serif",
+  "palette": {
+    "ink": "#000000",
+    "accent": "#000000",
+    "muted": "#444444",
+    "extra": "#222222",
+    "rule": "#cccccc",
+    "bg": "#ffffff"
+  },
+  "sizes": { "body": 12, "h1": 16, "h2": 14, "h3": 12, "title": 22, "subtitle": 13 },
+  "line_spacing": 2.0,
+  "page_margin_cm": 2.5
+}
