@@ -1,6 +1,6 @@
 ---
 name: pdf-export
-description: "Exporta documentos Markdown a PDF usando el pipeline confirmado en este proyecto: Pandoc (KaTeX para fórmulas LaTeX) → HTML → Chrome headless. Activa este skill cuando Bernardo pida 'exportar a PDF', 'genera el PDF', 'convierte a PDF', 'render PDF', 'pdf-export', o cualquier variante que implique producir un PDF desde un fichero Markdown o contenido con fórmulas. También actívalo cuando mencione 'pandoc', 'chrome headless', o pida ajustar márgenes/estilos del PDF."
+description: "Exporta documentos Markdown a PDF usando el pipeline confirmado en este proyecto: Pandoc (KaTeX para fórmulas LaTeX) → HTML → Chrome headless (por defecto) o WeasyPrint (cuando se piden marcadores/bookmarks/PDF navegable). Activa este skill cuando Bernardo pida 'exportar a PDF', 'genera el PDF', 'convierte a PDF', 'render PDF', 'pdf-export', o cualquier variante que implique producir un PDF desde un fichero Markdown o contenido con fórmulas. También actívalo cuando mencione 'pandoc', 'chrome headless', 'marcadores', 'bookmarks', 'PDF navegable', o pida ajustar márgenes/estilos del PDF."
 ---
 
 # PDF Export — Pipeline Pandoc + KaTeX + Chrome headless
@@ -9,10 +9,14 @@ Pipeline verificado en este equipo (2026-05-23). No requiere LaTeX ni wkhtmltopd
 
 ## Herramientas disponibles
 
-| Herramienta | Ruta |
-|---|---|
-| Pandoc 3.9.0.2 | `C:\Users\brjap\AppData\Local\Pandoc\pandoc` |
-| Chrome | `C:\Program Files\Google\Chrome\Application\chrome.exe` |
+| Herramienta | Ruta / Comando | Cuándo usarla |
+|---|---|---|
+| Pandoc 3.9.0.2 | `C:\Users\brjap\AppData\Local\Pandoc\pandoc` | Siempre (conversión MD → HTML) |
+| Chrome | `C:\Program Files\Google\Chrome\Application\chrome.exe` | Pipeline por defecto (sin marcadores) |
+| WeasyPrint | `weasyprint` (en PATH si instalado) | Pipeline con marcadores/bookmarks |
+
+> **WeasyPrint no instalado?** Instalar con: `pip install weasyprint`
+> Limitación: fórmulas LaTeX complejas pueden no renderizarse — usar solo cuando no hay fórmulas o son simples.
 
 Referencia completa: `pdf-guide.md` en la raíz del proyecto.
 
@@ -30,7 +34,17 @@ Identifica qué quiere exportar Bernardo:
 
 Si no hay ruta explícita, pregunta antes de asumir.
 
-### Paso 2 — Determinar opciones de salida
+### Paso 2 — Elegir pipeline
+
+Detecta si Bernardo pide **marcadores**, **bookmarks**, **PDF navegable**, o **outline**:
+
+| Condición | Pipeline |
+|---|---|
+| Sin mención de marcadores | **Chrome headless** (por defecto) |
+| Pide marcadores / PDF navegable / outline | **WeasyPrint** |
+| Hay fórmulas LaTeX **y** pide marcadores | Avisa del conflicto; pregunta si prioriza fórmulas o marcadores |
+
+### Paso 3 — Determinar opciones de salida
 
 Pregunta solo si no está claro en el contexto:
 
@@ -39,7 +53,9 @@ Pregunta solo si no está claro en el contexto:
 - **CSS personalizado**: si existe `estilo.css` en el directorio, úsalo automáticamente
 - **Márgenes**: `--no-margins` por defecto; ajusta si Bernardo especifica
 
-### Paso 3 — Ejecutar
+### Paso 4 — Ejecutar
+
+#### Pipeline A — Chrome headless (por defecto, con KaTeX)
 
 ```bash
 # Pandoc: Markdown → HTML con KaTeX embebido
@@ -50,7 +66,7 @@ pandoc <input.md> \
   [--css=<estilo.css>] \
   -o <output.html>
 
-# Chrome headless: HTML → PDF
+# Chrome headless: HTML → PDF (sin marcadores)
 "/c/Program Files/Google/Chrome/Application/chrome.exe" \
   --headless=new \
   --print-to-pdf=<output.pdf> \
@@ -58,9 +74,25 @@ pandoc <input.md> \
   <output.html>
 ```
 
+#### Pipeline B — WeasyPrint (con marcadores automáticos)
+
+```bash
+# Pandoc: Markdown → HTML (sin KaTeX; WeasyPrint no lo interpreta)
+pandoc <input.md> \
+  --standalone \
+  [-M title="<título>" -M author="<autor>" -M date="<fecha>"] \
+  [--css=<estilo.css>] \
+  -o <output.html>
+
+# WeasyPrint: HTML → PDF con bookmarks desde los headings H1-H6
+weasyprint <output.html> <output.pdf>
+```
+
+> WeasyPrint genera el árbol de marcadores automáticamente a partir de los headings del HTML — no requiere configuración adicional.
+
 Elimina el `.html` intermedio después del PDF salvo que Bernardo lo pida explícitamente.
 
-### Paso 4 — Verificar y abrir
+### Paso 5 — Verificar y abrir
 
 Comprueba que el PDF se generó (tamaño > 0). Ábelo con Chrome para que Bernardo lo revise:
 
@@ -160,3 +192,6 @@ pandoc doc1.md doc2.md doc3.md --standalone --katex -o combined.html
 | Fórmulas sin renderizar | KaTeX no embebido | Confirma que pandoc usó `--katex`, no `--mathjax` |
 | Salto de página en tabla | CSS no aplicado | Añade `page-break-inside: avoid` a `table` en el CSS |
 | Texto cortado en márgenes | `--no-margins` activo con contenido ancho | Ajusta `max-width` en CSS o añade márgenes explícitos a Chrome |
+| Fórmulas rotas con WeasyPrint | WeasyPrint no interpreta KaTeX/MathML | Usa pipeline A (Chrome headless) si el doc tiene fórmulas |
+| Marcadores no aparecen | Pipeline A (Chrome) usado por error | Cambia a pipeline B (WeasyPrint) |
+| `weasyprint` no encontrado | No instalado | Ejecuta `pip install weasyprint` |
