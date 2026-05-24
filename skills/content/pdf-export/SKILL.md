@@ -102,23 +102,26 @@ Ejecuta los comandos de la sección [Verificación del setup](#verificación-del
 
 ### Paso 1 — Recibir el input
 
-Identifica qué quiere exportar Bernardo:
+Identifica qué quiere exportar Bernardo y qué tipo de fuente es:
 
-- **Fichero existente**: ruta relativa o absoluta al `.md`
-- **Contenido inline**: Bernardo pega el contenido en el chat → escríbelo a un `.md` temporal
-- **Directorio**: múltiples `.md` → pregunta si quiere un PDF por fichero o concatenado
+| Fuente | Descripción |
+|---|---|
+| **`.md` existente** | Ruta relativa o absoluta al fichero Markdown |
+| **Contenido inline** | Bernardo pega el contenido en el chat → escríbelo a un `.md` temporal |
+| **`.docx`** | Word creado con `plantilla-academica-brj.docx` (estilos `Titulo 1/2/3`) |
+| **Directorio** | Múltiples `.md` → pregunta si quiere un PDF por fichero o concatenado |
 
 Si no hay ruta explícita, pregunta antes de asumir.
+Si la fuente es `.docx`, el destino es siempre Pipeline B (WeasyPrint con bookmarks) — ver [README.md](README.md).
 
 ### Paso 2 — Elegir pipeline
 
-Detecta si Bernardo pide **marcadores**, **bookmarks**, **PDF navegable**, o **outline**:
-
-| Condición | Pipeline |
-|---|---|
-| Sin mención de marcadores | **Chrome headless** (por defecto) |
-| Pide marcadores / PDF navegable / outline | **WeasyPrint** |
-| Hay fórmulas LaTeX **y** pide marcadores | Avisa del conflicto; pregunta si prioriza fórmulas o marcadores |
+| Fuente | Marcadores pedidos | Pipeline |
+|---|---|---|
+| `.md` | No | **A — Chrome headless** (con KaTeX, sin bookmarks) |
+| `.md` | Sí | **B — WeasyPrint** (bookmarks automáticos, sin KaTeX) |
+| `.md` | Sí + hay fórmulas LaTeX | Avisa del conflicto; pregunta si prioriza fórmulas o marcadores |
+| `.docx` | (siempre) | **B — WeasyPrint** (bookmarks desde estilos `Titulo N`) |
 
 ### Paso 3 — Determinar opciones de salida
 
@@ -152,6 +155,8 @@ pandoc <input.md> \
 
 #### Pipeline B — WeasyPrint (con marcadores automáticos)
 
+**Fuente Markdown:**
+
 ```bash
 # Pandoc: Markdown → HTML (sin KaTeX; WeasyPrint no lo interpreta)
 pandoc <input.md> \
@@ -159,12 +164,30 @@ pandoc <input.md> \
   [-M title="<título>" -M author="<autor>" -M date="<fecha>"] \
   [--css=<estilo.css>] \
   -o <output.html>
+```
 
+**Fuente DOCX** (con `plantilla-academica-brj.docx`):
+
+```bash
+# Pandoc: DOCX → HTML (mapea Titulo 1/2/3 → h1/h2/h3 automáticamente)
+pandoc <input.docx> \
+  --standalone \
+  [--css=<estilo.css>] \
+  -o <output.html>
+
+# Verificar que los headings se mapearon antes de continuar
+grep -c "<h[1-6]" <output.html>   # debe ser > 0
+```
+
+**Paso final común (ambas fuentes):**
+
+```bash
 # WeasyPrint: HTML → PDF con bookmarks desde los headings H1-H6
 weasyprint <output.html> <output.pdf>
 ```
 
 > WeasyPrint genera el árbol de marcadores automáticamente a partir de los headings del HTML — no requiere configuración adicional.
+> Si `grep` devuelve 0, el DOCX no tiene estilos de heading: pedir a Bernardo que aplique `Titulo 1/2/3` en Word antes de reintentar.
 
 Elimina el `.html` intermedio después del PDF salvo que Bernardo lo pida explícitamente.
 

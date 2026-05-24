@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="258" viewBox="0 0 760 258" font-family="'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+      <polygon points="0 0, 8 3.5, 0 7" fill="#555"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="760" height="258" fill="#f8f9fa" rx="10"/>
+
+  <!-- Title -->
+  <text x="380" y="24" text-anchor="middle" font-size="13" font-weight="bold" fill="#222">pdf-export — Flujos de trabajo con marcadores (bookmarks)</text>
+
+  <!-- ══════════════════════════════════════════
+       WORKFLOW A · Markdown
+  ═══════════════════════════════════════════ -->
+  <text x="16" y="52" font-size="10" fill="#2a7ab8" font-weight="bold">Workflow A · Markdown</text>
+
+  <!-- Source MD -->
+  <rect x="16" y="58" width="108" height="44" rx="5" fill="#dbeeff" stroke="#2a7ab8" stroke-width="1.5"/>
+  <text x="70" y="76" text-anchor="middle" font-size="11" font-weight="bold" fill="#1a5a90">input.md</text>
+  <text x="70" y="92" text-anchor="middle" font-size="9" fill="#444">Markdown source</text>
+
+  <line x1="124" y1="80" x2="157" y2="80" stroke="#555" stroke-width="1.3" marker-end="url(#arr)"/>
+
+  <!-- Pandoc A -->
+  <rect x="157" y="58" width="122" height="44" rx="5" fill="#fff8e1" stroke="#e0a800" stroke-width="1.5"/>
+  <text x="218" y="76" text-anchor="middle" font-size="10" font-weight="bold" fill="#7d5a00">pandoc</text>
+  <text x="218" y="92" text-anchor="middle" font-size="9" fill="#7d5a00">--standalone</text>
+
+  <line x1="279" y1="80" x2="315" y2="80" stroke="#555" stroke-width="1.3" marker-end="url(#arr)"/>
+
+  <!-- HTML A -->
+  <rect x="315" y="58" width="88" height="44" rx="5" fill="#d4edda" stroke="#28a745" stroke-width="1.5"/>
+  <text x="359" y="76" text-anchor="middle" font-size="10" font-weight="bold" fill="#155724">HTML</text>
+  <text x="359" y="92" text-anchor="middle" font-size="9" fill="#155724">h1 … h6</text>
+
+  <!-- ══════════════════════════════════════════
+       WORKFLOW B · Word (.docx)
+  ═══════════════════════════════════════════ -->
+  <text x="16" y="156" font-size="10" fill="#7b2d8b" font-weight="bold">Workflow B · Word (.docx)</text>
+
+  <!-- Source DOCX -->
+  <rect x="16" y="162" width="108" height="58" rx="5" fill="#ead5f5" stroke="#7b2d8b" stroke-width="1.5"/>
+  <text x="70" y="181" text-anchor="middle" font-size="11" font-weight="bold" fill="#4a1060">input.docx</text>
+  <text x="70" y="196" text-anchor="middle" font-size="8" fill="#444">plantilla-academica</text>
+  <text x="70" y="209" text-anchor="middle" font-size="8" fill="#444">-brj.docx (estilos Titulo)</text>
+
+  <line x1="124" y1="191" x2="157" y2="191" stroke="#555" stroke-width="1.3" marker-end="url(#arr)"/>
+
+  <!-- Pandoc B -->
+  <rect x="157" y="162" width="122" height="58" rx="5" fill="#fff8e1" stroke="#e0a800" stroke-width="1.5"/>
+  <text x="218" y="181" text-anchor="middle" font-size="10" font-weight="bold" fill="#7d5a00">pandoc</text>
+  <text x="218" y="196" text-anchor="middle" font-size="9" fill="#7d5a00">Titulo 1/2/3</text>
+  <text x="218" y="210" text-anchor="middle" font-size="9" fill="#7d5a00">&#x2192; h1 / h2 / h3</text>
+
+  <line x1="279" y1="191" x2="315" y2="191" stroke="#555" stroke-width="1.3" marker-end="url(#arr)"/>
+
+  <!-- HTML B -->
+  <rect x="315" y="169" width="88" height="44" rx="5" fill="#d4edda" stroke="#28a745" stroke-width="1.5"/>
+  <text x="359" y="187" text-anchor="middle" font-size="10" font-weight="bold" fill="#155724">HTML</text>
+  <text x="359" y="203" text-anchor="middle" font-size="9" fill="#155724">h1 … h6</text>
+
+  <!-- ══════════════════════════════════════════
+       Convergence → WeasyPrint → PDF
+       HTML A center: (359, 80)  HTML B center: (359, 191)
+       WeasyPrint center y = (80+191)/2 = 135.5 → y_start = 114
+  ═══════════════════════════════════════════ -->
+  <!-- HTML A (right x=403, y=80) → WeasyPrint (left x=465, y≈125) -->
+  <line x1="403" y1="80" x2="463" y2="123" stroke="#555" stroke-width="1.3" marker-end="url(#arr)"/>
+
+  <!-- HTML B (right x=403, y=191) → WeasyPrint (left x=465, y≈147) -->
+  <line x1="403" y1="191" x2="463" y2="149" stroke="#555" stroke-width="1.3" marker-end="url(#arr)"/>
+
+  <!-- WeasyPrint -->
+  <rect x="463" y="114" width="140" height="44" rx="5" fill="#fde8e8" stroke="#c0392b" stroke-width="1.5"/>
+  <text x="533" y="132" text-anchor="middle" font-size="10" font-weight="bold" fill="#922b21">WeasyPrint</text>
+  <text x="533" y="148" text-anchor="middle" font-size="9" fill="#922b21">genera bookmark tree</text>
+
+  <line x1="603" y1="136" x2="643" y2="136" stroke="#555" stroke-width="1.3" marker-end="url(#arr)"/>
+
+  <!-- PDF Output -->
+  <rect x="643" y="104" width="106" height="64" rx="6" fill="#ffffff" stroke="#222" stroke-width="2"/>
+  <text x="696" y="126" text-anchor="middle" font-size="13" font-weight="bold" fill="#222">PDF</text>
+  <text x="696" y="146" text-anchor="middle" font-size="10" fill="#444">+ bookmarks</text>
+  <text x="696" y="160" text-anchor="middle" font-size="9" fill="#777">outline automatico</text>
+</svg>
