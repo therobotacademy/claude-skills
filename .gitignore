@@ -19,3 +19,8 @@ Thumbs.db
 
 # Personal reference material (not part of the skill collection)
 ASIDE-Slack-Gitkraken/
+
+BACKLOG/
+
+# Cataloga el nuevo skill que acabo de añadir, incluyendo la referencia en el README: word-template-gen 
+skills/word-template-gen/

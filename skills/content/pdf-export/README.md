@@ -2,7 +2,7 @@
 
 Exporta documentos a **PDF con marcadores/bookmarks** a partir de dos fuentes posibles: Markdown (`.md`) o Word (`.docx`). El pipeline compartido es Pandoc → HTML → WeasyPrint, que genera automáticamente el árbol de bookmarks a partir de los headings H1–H6.
 
-![Workflows](workflows.svg)
+![Workflows](img/workflows.svg)
 
 ---
 
