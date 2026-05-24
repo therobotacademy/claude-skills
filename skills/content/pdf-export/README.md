@@ -93,6 +93,47 @@ Si el Paso 2 no devuelve resultados, el DOCX no tiene estilos de heading aplicad
 
 ---
 
+## Múltiples archivos MD → un solo PDF
+
+Cuando el contenido está repartido en varios `.md` (capítulos, módulos, secciones), úsalos con `concat_md.py` antes de pasar al pipeline:
+
+```powershell
+# Une todos los capítulos en un solo .md, extrae el frontmatter del primero
+python concat_md.py capitulos\cap*.md -o combined.md
+
+# Con metadatos explícitos
+python concat_md.py capitulos\cap*.md -o combined.md `
+    --title "Mi Libro" --author "Bernardo Ronquillo" --date "2026"
+
+# Insertar saltos de página explícitos entre secciones (útil con Chrome/Pipeline A)
+python concat_md.py capitulos\cap*.md -o combined.md --pagebreaks
+
+# Concatenar desde un directorio completo
+python concat_md.py --dir capitulos\ -o combined.md
+```
+
+El `combined.md` resultante se pasa directamente al paso 1 de Workflow A (Pandoc).
+
+### Opciones de `concat_md.py`
+
+| Opción | Descripción |
+|---|---|
+| `files` | Archivos .md o patrones glob (`cap*.md`) |
+| `--dir DIR` | Directorio completo; ordena por nombre |
+| `-o SALIDA` | Archivo .md de salida (requerido) |
+| `--title`, `--author`, `--date` | Metadatos para el frontmatter YAML |
+| `--lang` | Código ISO de idioma (default: `es`) |
+| `--pagebreaks` | Insertar `<div page-break>` entre secciones |
+| `--keep-frontmatter` | No eliminar el frontmatter YAML de los fuentes |
+
+> **Nota sobre page breaks:** con el CSS del pipeline (`break-before: page` en `h1`), los saltos de página ya se aplican automáticamente en cada capítulo — `--pagebreaks` solo es necesario si el CSS no está configurado o si se quiere un salto en una sección que no empieza con `#`.
+
+### Fallback para bookmarks: PyMuPDF
+
+Si WeasyPrint no está disponible (Windows sin GTK), el script `example/make_pdf.py` usa Chrome headless + PyMuPDF para inyectar los bookmarks post-generación. Búsqueda secuencial de headings — funciona correctamente incluso con títulos de sección repetidos entre capítulos.
+
+---
+
 ## Comparativa
 
 | | Workflow A (MD) | Workflow B (DOCX) |
