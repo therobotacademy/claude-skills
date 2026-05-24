@@ -22,7 +22,83 @@ Referencia completa: `pdf-guide.md` en la raíz del proyecto.
 
 ---
 
+## Verificación del setup
+
+Ejecuta estas comprobaciones **siempre que se invoque el skill por primera vez en una sesión**. Si alguna dependencia falta, reporta al usuario antes de continuar con cualquier exportación.
+
+### Comandos de verificación
+
+```powershell
+# Pandoc — requerido siempre
+pandoc --version
+
+# Chrome — requerido para Pipeline A
+Test-Path "C:\Program Files\Google\Chrome\Application\chrome.exe"
+
+# WeasyPrint — requerido solo para Pipeline B (marcadores)
+weasyprint --version
+
+# Python/pip — necesario para instalar WeasyPrint si falta
+python --version
+pip --version
+```
+
+### Tabla de dependencias
+
+| Herramienta | Pipeline | Verificación | Resultado esperado | Cómo instalar si falta |
+|---|---|---|---|---|
+| **Pandoc** | A y B | `pandoc --version` | `pandoc 3.x.x` | [pandoc.org/installing.html](https://pandoc.org/installing.html) — descarga el instalador `.msi` |
+| **Chrome** | A (por defecto) | `Test-Path "C:\Program Files\Google\Chrome\Application\chrome.exe"` | `True` | Instalar Google Chrome desde chrome.google.com |
+| **WeasyPrint** | B (marcadores) | `weasyprint --version` | `WeasyPrint x.x` | `pip install weasyprint` |
+| **Python + pip** | Prerequisito de WeasyPrint | `python --version` / `pip --version` | `Python 3.x` | [python.org/downloads](https://www.python.org/downloads/) — marcar "Add to PATH" en el instalador |
+
+### Cómo reportar al usuario
+
+Tras ejecutar las comprobaciones, muestra un bloque de estado claro:
+
+**Setup completo (ejemplo):**
+```
+✅ Setup verificado
+   Pandoc 3.9.0.2 — OK
+   Chrome — OK
+   WeasyPrint — OK (Pipeline B disponible)
+```
+
+**Setup parcial (ejemplo — WeasyPrint ausente):**
+```
+⚠️  Setup parcial — dependencia faltante:
+
+   ✅ Pandoc 3.9.0.2 — OK
+   ✅ Chrome — OK
+   ❌ WeasyPrint — no encontrado
+      → Instalar: pip install weasyprint
+      → Verificar tras instalar: weasyprint --version
+
+   Pipeline A (Chrome headless, sin marcadores) disponible.
+   Pipeline B (marcadores) no disponible hasta instalar WeasyPrint.
+   ¿Continuar con Pipeline A?
+```
+
+**Setup roto (Pandoc o Chrome ausente):**
+```
+🚫 No se puede exportar — dependencia crítica faltante:
+
+   ❌ Pandoc — no encontrado
+      → Instalar: https://pandoc.org/installing.html
+
+   Deteniéndose. Instala Pandoc y vuelve a intentarlo.
+```
+
+Si falta Pandoc o Chrome, **detenerse completamente** — no intentar la exportación.
+Si solo falta WeasyPrint, ofrecer continuar con Pipeline A.
+
+---
+
 ## Protocolo de ejecución
+
+### Paso 0 — Verificar setup
+
+Ejecuta los comandos de la sección [Verificación del setup](#verificación-del-setup) y reporta el resultado al usuario. Si hay dependencias críticas ausentes, detente aquí.
 
 ### Paso 1 — Recibir el input
 
