@@ -10,6 +10,10 @@ Append the current conversation exchange (and any prior unlogged exchanges) to `
 
 **Always active by default.** Fire automatically after every assistant response — no explicit user request is needed.
 
+>> Whenever you commit, run /log-turn
+>> Also look at `.claude\memory\feedback_log-turn-on-commit.md`
+>> and `C:Users\brjap\.claude\projects\C--Users-brjap--claude-skills-c1-english-booster\memory\feedback_log-turn-on-commit.md`
+
 Exception: if the user states in the current session something like "only fire on demand", "solo cuando te lo pida", or any clear equivalent, switch to on-demand mode for the remainder of that session. In on-demand mode, fire only when explicitly asked. Common on-demand phrasings:
 
 - "Vuelca todas tus respuestas a sessions/today-LOG.md"
