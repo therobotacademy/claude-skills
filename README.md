@@ -71,6 +71,49 @@ Alternatively, for Claude Code CLI users: copy the skill folder into `~/.claude/
 
 ---
 
+## Linked skill collections (submodules)
+
+This repo tracks external skill collections as Git submodules:
+
+| Folder | Source | Description |
+| ------ | ------ | ----------- |
+| [`skills-lurio84/`](skills-lurio84/) | [lurio84/claude-skills](https://github.com/lurio84/claude-skills) | External skill collection by lurio84 |
+
+### Common submodule operations
+
+**Clone this repo including all submodules:**
+```bash
+git clone --recurse-submodules https://github.com/therobotacademy/claude-skills.git
+```
+
+**If you already cloned without submodules, initialize them:**
+```bash
+git submodule update --init --recursive
+```
+
+**Pull latest changes from a submodule's upstream:**
+```bash
+git submodule update --remote skills-lurio84
+```
+
+**Pull all submodules' latest upstream at once:**
+```bash
+git submodule update --remote --merge
+```
+
+**Check status of all submodules:**
+```bash
+git submodule status
+```
+
+After `--remote` updates, commit the updated pointer in the parent repo:
+```bash
+git add skills-lurio84
+git commit -m "chore: update skills-lurio84 submodule to latest"
+```
+
+---
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Each skill must follow the standard structure and include a `SKILL.md` with YAML frontmatter. Run the included skill validator before opening a PR.
