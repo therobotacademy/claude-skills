@@ -48,6 +48,7 @@ Skills are self-contained instructions that extend Claude's capabilities for spe
 | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | [`registro-sesion-claude`](skills/agentic/registro-sesion-claude/) | Captures metrics and scope of a Claude Code session into a structured Markdown file (`USAGE.md` or `sessions/{date}-{slug}.md`). Triggered by phrases like "registra la sesión", "documenta esta sesión", or pasting `/usage` output. |
 | [`session-cot`](skills/agentic/cot-session/)                       | Reconstructs the reasoning trace of a complex session as a Chain of Thought document — numbered steps with Input / Reasoning / Key inference, plus recurring reasoning patterns. Triggered by "escribe el CoT", "documenta el razonamiento de la sesión", or at the close of long design/architecture sessions. Not a summary of output — a trace of the thinking process. |
+| [`setup-minimax`](skills/agentic/setup-minimax/)                   | Walks a non-technical user through configuring Claude Code to use MiniMax as the model provider — one question at a time, verifies each step, creates the launcher `.bat` and the MCP config for web search. Triggered by "configurar Claude Code con MiniMax", "quiero usar MiniMax", "cambiar a MiniMax-M3". |
 
 ---
 
