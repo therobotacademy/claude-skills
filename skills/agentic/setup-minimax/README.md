@@ -1,3 +1,12 @@
+Under Windows you can directly copy & paste `claude-minimax.bat`
+
+- This script is what builds the skill when you run it
+
+Then run the script from the folder you want to work in:
+
+```PowerShell
+.\claude-minimax.bat
+```
 
 ## Tabla de Modelos de MiniMax y Equivalencias
 
