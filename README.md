@@ -16,6 +16,7 @@ Skills are self-contained instructions that extend Claude's capabilities for spe
 | [`fitz-agent-auditor`](skills/dev/fitz-agent-auditor/) | Forensic analysis of AI agent outputs using the FITZ taxonomy (SALUDABLE / ALUCINACIÓN / INYECCIÓN / DRIFT). Detects hallucination, prompt injection, and role drift. Produces a verdict, detected signals, and an operational recommendation to prevent recurrence. |
 | [`log-turn`](skills/dev/log-turn/)                     | Automatically appends every conversation turn to `sessions/today-LOG.md` in a structured `## Prompt N: <Title>` / `## Response N` format. Always active by default; switches to on-demand mode only if the user explicitly requests it in the current session.   |
 | [`karpathy-guidelines`](skills/dev/karpathy-guidelines/) | Behavioral guidelines to reduce common LLM coding mistakes, derived from Andrej Karpathy's observations — surface assumptions, keep changes minimal and surgical, and define verifiable success criteria before looping.                                          |
+| [`opus5-optim`](skills/dev/opus5-optim/)               | Applies Anthropic's official Opus 5 prompting guidance on response length — keeps direct answers concise and high-level unless depth is requested, and inserts a `<tone_preference>` reminder near the end of long system prompts.                                |
 
 ### ✍️ Content
 
