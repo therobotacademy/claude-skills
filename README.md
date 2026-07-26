@@ -1,6 +1,6 @@
 # bernardo-skills
 
-A curated collection of Claude skills for development, content creation, and agentic workflows.
+A curated collection of Claude skills for development, content creation, agentic workflows, and a few cross-repo tools.
 
 Skills are self-contained instructions that extend Claude's capabilities for specific recurring tasks. Each skill lives in its own folder with a `SKILL.md` file and optional supporting resources.
 
@@ -15,6 +15,7 @@ Skills are self-contained instructions that extend Claude's capabilities for spe
 | [`repo-reconciler`](skills/dev/repo-reconciler/)       | Audits a repository for inconsistencies between code and documentation — detects undocumented features, stale README sections, broken examples, and version drift. Generates ready-to-apply patches.                                                                  |
 | [`fitz-agent-auditor`](skills/dev/fitz-agent-auditor/) | Forensic analysis of AI agent outputs using the FITZ taxonomy (SALUDABLE / ALUCINACIÓN / INYECCIÓN / DRIFT). Detects hallucination, prompt injection, and role drift. Produces a verdict, detected signals, and an operational recommendation to prevent recurrence. |
 | [`log-turn`](skills/dev/log-turn/)                     | Automatically appends every conversation turn to `sessions/today-LOG.md` in a structured `## Prompt N: <Title>` / `## Response N` format. Always active by default; switches to on-demand mode only if the user explicitly requests it in the current session.   |
+| [`karpathy-guidelines`](skills/dev/karpathy-guidelines/) | Behavioral guidelines to reduce common LLM coding mistakes, derived from Andrej Karpathy's observations — surface assumptions, keep changes minimal and surgical, and define verifiable success criteria before looping.                                          |
 
 ### ✍️ Content
 
@@ -50,6 +51,14 @@ Skills are self-contained instructions that extend Claude's capabilities for spe
 | [`session-cot`](skills/agentic/cot-session/)                       | Reconstructs the reasoning trace of a complex session as a Chain of Thought document — numbered steps with Input / Reasoning / Key inference, plus recurring reasoning patterns. Triggered by "escribe el CoT", "documenta el razonamiento de la sesión", or at the close of long design/architecture sessions. Not a summary of output — a trace of the thinking process. |
 | [`setup-minimax`](skills/agentic/setup-minimax/)                   | Walks a non-technical user through configuring Claude Code to use MiniMax as the model provider — one question at a time, verifies each step, creates the launcher `.bat` and the MCP config for web search. Triggered by "configurar Claude Code con MiniMax", "quiero usar MiniMax", "cambiar a MiniMax-M3". |
 
+### 🧰 Standalone (cross-repo)
+
+These skills don't fit the dev/content/agentic taxonomy — they live directly under `skills/` because they encode conventions for a different repository (`core-human-knowledge`).
+
+| Skill                                | Description                                                                                                                                                                                                                                                                                                                                                                              |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`md-guide-builder`](skills/md-guide-builder/) | Produces a practical Markdown guide (`NN-TIPO-tema.md`) in the style of `core-human-knowledge`, paired with an explanatory SVG (COIIAOC palette · V2 typography). Two modes: **in-repo** (numerates, places in `guides/`, SVG mandatory) and **anywhere** (writes the `.md` to the current folder, SVG offered). Distinguishable from `text-to-diagram` and `code-diagram-explainer` — both start from finished code/prose; this one starts from a topic or raw notes. |
+
 ---
 
 ## How to install a skill
@@ -64,11 +73,12 @@ Alternatively, for Claude Code CLI users: copy the skill folder into `~/.claude/
 
 ## Skill categories
 
-| Category            | What goes here                                                  |
-| ------------------- | --------------------------------------------------------------- |
-| `skills/dev/`     | Code auditors, linters, generators, repo tools                  |
-| `skills/content/` | Post writers, doc builders, voice refiners, validators          |
-| `skills/agentic/` | Multi-step workflows, agent orchestrators, automation pipelines |
+| Category                              | What goes here                                                     |
+| ------------------------------------- | ------------------------------------------------------------------ |
+| `skills/dev/`                       | Code auditors, linters, generators, repo tools                     |
+| `skills/content/`                   | Post writers, doc builders, voice refiners, validators             |
+| `skills/agentic/`                   | Multi-step workflows, agent orchestrators, automation pipelines    |
+| `skills/<name>/` (top-level)         | Cross-repo / standalone skills with their own conventions — these don't belong to dev/content/agentic |
 
 ---
 
