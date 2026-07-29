@@ -30,6 +30,8 @@ Skim this first if you're not sure which skill applies — it's keyed by what yo
 | Save a structured record of a Claude Code session (`/usage`, scope)     | [`registro-sesion-claude`](skills/agentic/registro-sesion-claude/)              |
 | Write up the reasoning trace of a long session, not just its output    | [`session-cot`](skills/agentic/cot-session/)                                    |
 | Switch Claude Code to MiniMax as the model provider                    | [`setup-minimax`](skills/agentic/setup-minimax/)                                |
+| Explain a code fragment (function, n8n node, pipeline) as an SVG diagram | [`code-diagram-explainer`](skills/code/code-diagram-explainer/)                |
+| Turn a section of prose (methodology, architecture, process) into a diagram | [`text-to-diagram`](skills/code/text-to-diagram/)                          |
 
 ---
 
@@ -85,6 +87,14 @@ Skim this first if you're not sure which skill applies — it's keyed by what yo
 | [`setup-minimax`](skills/agentic/setup-minimax/)                   | Walks a non-technical user through configuring Claude Code to use MiniMax as the model provider — one question at a time, verifies each step, creates the launcher`.bat` and the MCP config for web search. Triggered by "configurar Claude Code con MiniMax", "quiero usar MiniMax", "cambiar a MiniMax-M3".                                                                |
 | [`pseudocode-ladder`](skills/agentic/pseudocode-ladder/)           | 4-level protocol (general logic → classes → function pseudo-code → optional near-Python) inserted before real code, marking each decision as delegable or non-delegable and requiring explicit author sign-off before advancing a level. FORWARD mode plans a new module and persists an Obsidian vault (`docs/design/`) synced with each approved level. INVERSE mode reconstructs the ladder from an existing repo, auditing for undocumented implicit decisions, missing invariants, and boundary violations, with a cheap inventory pass before any deep per-module audit. |
 
+### 📊 Code
+
+| Skill                                                            | Description                                                                                                                                                                                                                     |
+| ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`code-diagram-explainer`](skills/code/code-diagram-explainer/) | Generates inline SVG diagrams explaining a code fragment — n8n nodes, functions, pipelines, classes — with literal pseudo-code extracted from source, control flow with ✓/✗ branches, and didactic click-to-ask annotations. |
+| [`text-to-diagram`](skills/code/text-to-diagram/)               | Converts a section of structured text (methodology, process, architecture, conceptual framework) into an SVG diagram meant to replace the text, not decorate it — readable without going back to the original prose.        |
+
+Both share the COIIAOC v1.1 palette and the `sendPrompt` click-to-ask pattern but start from different inputs (code vs. prose) — see [`skills/code/README.md`](skills/code/README.md) for how to pick between them.
 
 ---
 
@@ -106,6 +116,7 @@ Alternatively, for Claude Code CLI users: copy the skill folder into `~/.claude/
 | `skills/dev/`                | Code auditors, linters, generators, repo tools                                                         |
 | `skills/content/`            | Post writers, doc builders, voice refiners, validators                                                 |
 | `skills/agentic/`            | Multi-step workflows, agent orchestrators, automation pipelines                                        |
+| `skills/code/`               | SVG diagram generators explaining code or structured text visually                                     |
 | `skills/<name>/` (top-level) | Cross-repo / standalone skills with their own conventions — these don't belong to dev/content/agentic |
 
 ---
