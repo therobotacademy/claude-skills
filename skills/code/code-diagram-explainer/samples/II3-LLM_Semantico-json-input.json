@@ -1,0 +1,280 @@
+{
+  "name": "II3-LLM_Semantico (json-input)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "4f27a3fe-7321-4ddc-a734-e998310d1dcd",
+      "name": "Trigger · Ejecutar manualmente",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -416,
+        -48
+      ],
+      "notes": "Trigger manual. Click en 'Execute Workflow'."
+    },
+    {
+      "parameters": {
+        "jsCode": "// VERBEX · II3 · Construir body para Anthropic API\n// Contiene el system prompt completo (SOUL + SKILL condensados con 5 ejemplos few-shot).\n// Salida: objeto JSON listo para enviar como body a /v1/messages.\n\nconst SYSTEM_PROMPT = `Eres el agente de normalización de Purchase Orders de VERBEX COMPOSITES S.L. (Tier 2 composites, Sevilla). Recibes POs en texto libre de clientes Tier 1 (Stratos, Kairos) y OEMs (Helion, Vectair).\n\nREGLAS ABSOLUTAS:\n1. Nunca calculas fechas, días ni cantidades. Solo extraes lo escrito.\n2. Nunca inventas Part Numbers. Si no reconoces un PN, part_number_proveedor: null y bajas la confianza.\n3. Si detectas AOG, \"Aircraft on Ground\", \"inmovilizado\" o urgencia extrema, devuelves \"aog\": true.\n4. Si el texto menciona \"Rev.\", \"Amendment\", añades alerta con numero_pedido original.\n5. Devuelves SOLO el JSON. Sin explicaciones, sin markdown.\n6. El idioma de los campos extraídos es el del documento original.\n7. prioridad SIEMPRE \"NORMAL\" — n8n recalcula con R01/R02.\n\nCLIENTES (nombre → codigo_erp · tier · programa):\n- Stratos Systems → STRA-001 · TIER_1 · ST900\n- Kairos Aerospace → KAIRO-001 · TIER_1 · HX7\n- Kairos Defense → KAIRO-002 · TIER_1 · HX7\n- Helion Aircraft → HELI-001 · OEM · HX7\n- Vectair Industries Iberia → VECT-001 · OEM · VX4\n\nEQUIVALENCIAS PN cliente → PN proveedor:\nST9-HTP-RIB-047 → VBX-COMP-4471-B (Costilla HTP delantera, ST900, CoC)\nST9-HTP-RIB-048 → VBX-COMP-4472-C (Costilla HTP trasera, ST900, CoC)\nHX7-FUS-PNL-331 → VBX-COMP-3301-A (Panel fuselaje central, HX7, CoC + EASA Form 1)\nHX7-FUS-PNL-332 → VBX-COMP-3302-A (Panel fuselaje lateral, HX7, CoC + EASA Form 1)\nHX7-BHD-332 → VBX-COMP-3303-B (Mamparo, HX7, CoC + EASA Form 1)\nST9-LE-PNL-550 → VBX-COMP-5501-A (Borde ataque ala, ST900, CoC)\nHX7-ELV-220 → VBX-COMP-2201-C (Timón, RT55, CoC + EASA Form 1)\n\nSi PN cliente NO en tabla: part_number_proveedor: null + confianza baja.\n\nUNIDADES VÁLIDAS: EA | KG | ML | M2.\n\nCONFIANZA:\n0.95+ → texto estructurado (HelionLink CSV)\n0.80-0.95 → texto libre estándar\n0.60-0.80 → algún PN desconocido o campo ambiguo\n< 0.60 → varios campos faltantes\n\nSCHEMA estricto:\n{\"numero_pedido\":string,\"cliente\":{\"nombre\":string|null,\"tier\":TIER_1|OEM|null,\"codigo_erp\":string|null},\"lineas\":[{\"linea_id\":N,\"part_number_cliente\":string,\"part_number_proveedor\":string|null,\"descripcion\":string,\"cantidad\":N,\"unidad\":EA|KG|ML|M2,\"precio_unitario\":null,\"fecha_entrega_requerida\":YYYY-MM-DD|null,\"programa\":HX7|ST900|RT55|VX4|OTRO,\"prioridad\":NORMAL,\"requiere_coc\":bool,\"requiere_easa_form1\":bool}],\"estado_normalizacion\":COMPLETO|PARCIAL|ERROR,\"confianza\":0.0-1.0,\"alertas\":[string],\"aog\":bool}\n\nNO PO: {\"error\":\"no_pedido\",\"mensaje\":\"descripción\"}\n\nEJEMPLOS:\n\nE1) INPUT: Purchase Order PO-2025-STRA-0847. Stratos Systems. Part: ST9-HTP-RIB-047, Qty: 12 EA, Need Date: 15/09/2025. Ref: ST-900 program. CoC required.\nOUTPUT: {\"numero_pedido\":\"PO-2025-STRA-0847\",\"cliente\":{\"nombre\":\"Stratos Systems\",\"tier\":\"TIER_1\",\"codigo_erp\":\"STRA-001\"},\"lineas\":[{\"linea_id\":1,\"part_number_cliente\":\"ST9-HTP-RIB-047\",\"part_number_proveedor\":\"VBX-COMP-4471-B\",\"descripcion\":\"Costilla composite HTP sección delantera\",\"cantidad\":12,\"unidad\":\"EA\",\"precio_unitario\":null,\"fecha_entrega_requerida\":\"2025-09-15\",\"programa\":\"ST900\",\"prioridad\":\"NORMAL\",\"requiere_coc\":true,\"requiere_easa_form1\":false}],\"estado_normalizacion\":\"COMPLETO\",\"confianza\":0.97,\"alertas\":[],\"aog\":false}\n\nE2) INPUT: HELIONLINK|HX7-FUS-PNL-331|24|EA|2025-10-01|HX7|KAIRO-001|Normal\nOUTPUT: {\"numero_pedido\":\"HELIONLINK-HX7-FUS-PNL-331-2025-10-01\",\"cliente\":{\"nombre\":\"Kairos Aerospace\",\"tier\":\"TIER_1\",\"codigo_erp\":\"KAIRO-001\"},\"lineas\":[{\"linea_id\":1,\"part_number_cliente\":\"HX7-FUS-PNL-331\",\"part_number_proveedor\":\"VBX-COMP-3301-A\",\"descripcion\":\"Panel fuselaje composite sección central HX-7\",\"cantidad\":24,\"unidad\":\"EA\",\"precio_unitario\":null,\"fecha_entrega_requerida\":\"2025-10-01\",\"programa\":\"HX7\",\"prioridad\":\"NORMAL\",\"requiere_coc\":true,\"requiere_easa_form1\":true}],\"estado_normalizacion\":\"COMPLETO\",\"confianza\":0.99,\"alertas\":[],\"aog\":false}\n\nE3) INPUT: URGENT AOG - EC-MKL inmovilizado Aeropuerto Sevilla. Necesitamos HX7-FUS-PNL-332 x2 inmediatamente. Contacto: Juan García 654321098\nOUTPUT: {\"numero_pedido\":\"AOG-EC-MKL-PNL-332\",\"cliente\":{\"nombre\":null,\"tier\":null,\"codigo_erp\":null},\"lineas\":[{\"linea_id\":1,\"part_number_cliente\":\"HX7-FUS-PNL-332\",\"part_number_proveedor\":\"VBX-COMP-3302-A\",\"descripcion\":\"Panel fuselaje composite sección lateral HX-7\",\"cantidad\":2,\"unidad\":\"EA\",\"precio_unitario\":null,\"fecha_entrega_requerida\":null,\"programa\":\"HX7\",\"prioridad\":\"NORMAL\",\"requiere_coc\":true,\"requiere_easa_form1\":true}],\"estado_normalizacion\":\"PARCIAL\",\"confianza\":0.85,\"alertas\":[\"AOG detectado - verificar stock inmediatamente\",\"Cliente no identificado - contacto Juan García 654321098\"],\"aog\":true}\n\nE4) INPUT: PO-2025-STRA-0847 Rev. B. Amendment: cantidad línea 1 cambia de 12 a 8 EA. Nueva Need Date: 30/09/2025.\nOUTPUT: {\"numero_pedido\":\"PO-2025-STRA-0847-RevB\",\"cliente\":{\"nombre\":\"Stratos Systems\",\"tier\":\"TIER_1\",\"codigo_erp\":\"STRA-001\"},\"lineas\":[{\"linea_id\":1,\"part_number_cliente\":\"ST9-HTP-RIB-047\",\"part_number_proveedor\":\"VBX-COMP-4471-B\",\"descripcion\":\"Costilla composite HTP sección delantera\",\"cantidad\":8,\"unidad\":\"EA\",\"precio_unitario\":null,\"fecha_entrega_requerida\":\"2025-09-30\",\"programa\":\"ST900\",\"prioridad\":\"NORMAL\",\"requiere_coc\":true,\"requiere_easa_form1\":false}],\"estado_normalizacion\":\"COMPLETO\",\"confianza\":0.94,\"alertas\":[\"Amendment - revisar PO original PO-2025-STRA-0847 Rev. A\"],\"aog\":false}\n\nE5) INPUT: Pedido 5521. Componente ST9-HTP-RIB-999 x4 EA. Entrega: 01/11/2025.\nOUTPUT: {\"numero_pedido\":\"5521\",\"cliente\":{\"nombre\":null,\"tier\":null,\"codigo_erp\":null},\"lineas\":[{\"linea_id\":1,\"part_number_cliente\":\"ST9-HTP-RIB-999\",\"part_number_proveedor\":null,\"descripcion\":\"PN no encontrado en tabla de equivalencias\",\"cantidad\":4,\"unidad\":\"EA\",\"precio_unitario\":null,\"fecha_entrega_requerida\":\"2025-11-01\",\"programa\":\"ST900\",\"prioridad\":\"NORMAL\",\"requiere_coc\":false,\"requiere_easa_form1\":false}],\"estado_normalizacion\":\"PARCIAL\",\"confianza\":0.60,\"alertas\":[\"PN cliente ST9-HTP-RIB-999 no encontrado en tabla de equivalencias\",\"Cliente no identificado\"],\"aog\":false}\n\nDEVUELVE SOLO EL JSON. NADA MÁS.`;\n\n//const texto = $input.item.json.texto_po || '';\n\nconst texto = `\nPurchase Order PO-2025-STRA-0847. Stratos Systems.\nPart: ST9-HTP-RIB-047, Qty: 12 EA, Need Date: 15/09/2025.\nRef: ST-900 program. CoC required.\n`\n\nreturn [{\n  json: {\n    model: 'claude-sonnet-4-20250514',\n    max_tokens: 1500,\n    temperature: 0.1,\n    system: SYSTEM_PROMPT,\n    messages: [\n      { role: 'user', content: `Texto de la PO a normalizar:\\n\\n${texto}` }\n    ]\n  }\n}];"
+      },
+      "id": "7106d437-fcfd-4efa-a14d-8083669156e4",
+      "name": "Construir body API (SOUL + SKILL + few-shot)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -192,
+        -48
+      ],
+      "notes": "System prompt completo (SOUL + SKILL condensados + 5 ejemplos few-shot) inline en template literal. Output: objeto listo para body de /v1/messages."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-api-key",
+              "value": "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 "
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify($json) }}",
+        "options": {
+          "response": {
+            "response": {}
+          },
+          "timeout": 30000
+        }
+      },
+      "id": "628a9f09-a62b-421d-8b47-71cde58774ab",
+      "name": "Cognitivo · Llamada Claude API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        48,
+        -48
+      ],
+      "onError": "continueErrorOutput",
+      "notes": "POST /v1/messages · model=claude-sonnet-4-20250514 · temperature=0.1 · max_tokens=1500 · timeout 30s. Credencial HTTP Header Auth con name=x-api-key."
+    },
+    {
+      "parameters": {
+        "jsCode": "// VERBEX · II3 · Validar JSON LLM (parser anti-alucinación)\n// 1. Extrae bloque JSON (limpia code fences si los hay)\n// 2. Valida schema mínimo (lineas[] no vacío)\n// 3. Verifica que part_number_proveedor citado por el LLM exista en catálogo;\n//    si el LLM inventa un PN, lo fuerza a null y añade alerta.\n\nconst PNS_VALIDOS = new Set([\n  'VBX-COMP-4471-B','VBX-COMP-4472-C','VBX-COMP-3301-A','VBX-COMP-3302-A',\n  'VBX-COMP-3303-B','VBX-COMP-5501-A','VBX-COMP-5502-A','VBX-COMP-2201-C',\n  'VBX-COMP-2202-C','VBX-COMP-6601-A','VBX-COMP-6602-A','VBX-COMP-7701-B',\n  'VBX-COMP-7702-B','VBX-COMP-8801-A','VBX-COMP-9901-A','VBX-COMP-9902-A'\n]);\n\nconst apiResp = $input.item.json;\nif (!apiResp.content || !apiResp.content[0]) {\n  throw new Error('LLM_API_ERROR: respuesta vacía de Claude API');\n}\n\nconst raw = apiResp.content[0].text.trim();\nconst clean = raw.replace(/```json\\s*/gi, '').replace(/```\\s*/g, '').trim();\n\nlet po;\ntry {\n  po = JSON.parse(clean);\n} catch (e) {\n  throw new Error(`JSON_PARSE_ERROR: ${e.message} | Raw: ${clean.substring(0, 300)}`);\n}\n\nif (po.error === 'no_pedido') {\n  return [{\n    json: {\n      ...po,\n      estado_normalizacion: 'ERROR',\n      alertas: [`LLM clasificó como no_pedido: ${po.mensaje || ''}`],\n      lineas: [],\n      aog: false,\n      confianza: 0\n    }\n  }];\n}\n\nif (!po.lineas || !Array.isArray(po.lineas) || po.lineas.length === 0) {\n  throw new Error('SCHEMA_ERROR: lineas[] vacío o ausente en respuesta del LLM');\n}\n\nconst alertas = [...(po.alertas || [])];\nfor (const linea of po.lineas) {\n  if (linea.part_number_proveedor && !PNS_VALIDOS.has(linea.part_number_proveedor)) {\n    alertas.push(`PARSER: PN proveedor inventado por el LLM en línea ${linea.linea_id}: ${linea.part_number_proveedor}. Forzado a null.`);\n    linea.part_number_proveedor = null;\n  }\n}\npo.alertas = alertas;\n\nreturn [{ json: po }];"
+      },
+      "id": "4a72b272-20b0-4cc2-bc6d-fde1990b9e78",
+      "name": "Validar JSON LLM (anti-alucinación)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        256,
+        -48
+      ],
+      "notes": "Parser: extrae JSON, valida schema mínimo, verifica que el LLM no haya inventado un PN proveedor. Si lo inventa → null + alerta."
+    },
+    {
+      "parameters": {
+        "jsCode": "// VERBEX · II3 · R04 + R08 · Validar catálogo y cantidades\nconst EQUIVALENCIAS_PN = {\n  'ST9-HTP-RIB-047': 'VBX-COMP-4471-B',\n  'ST9-HTP-RIB-048': 'VBX-COMP-4472-C',\n  'HX7-FUS-PNL-331': 'VBX-COMP-3301-A',\n  'HX7-FUS-PNL-332': 'VBX-COMP-3302-A',\n  'HX7-BHD-332':     'VBX-COMP-3303-B',\n  'ST9-LE-PNL-550':  'VBX-COMP-5501-A',\n  'HX7-ELV-220':     'VBX-COMP-2201-C'\n};\nconst UNIDADES_VALIDAS = ['EA', 'KG', 'ML', 'M2'];\n\nconst po = JSON.parse(JSON.stringify($input.item.json));\nconst alertas = [...(po.alertas || [])];\nlet estadoError = false;\n\nfor (const linea of po.lineas) {\n  if (!EQUIVALENCIAS_PN[linea.part_number_cliente]) {\n    alertas.push(`R04: PN cliente desconocido en línea ${linea.linea_id}: ${linea.part_number_cliente}`);\n    estadoError = true;\n  }\n  if (linea.cantidad <= 0) {\n    alertas.push(`R08: cantidad inválida en línea ${linea.linea_id}: ${linea.cantidad}`);\n    estadoError = true;\n  }\n  if (!UNIDADES_VALIDAS.includes(linea.unidad)) {\n    alertas.push(`R08: unidad no reconocida en línea ${linea.linea_id}: ${linea.unidad}`);\n    estadoError = true;\n  }\n}\n\nif (estadoError) po.estado_normalizacion = 'ERROR';\npo.alertas = alertas;\nreturn [{ json: po }];"
+      },
+      "id": "5b9b3871-c128-4882-a6ff-1b7f0df96f44",
+      "name": "R04 + R08 · Validar catálogo y cantidades",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        -48
+      ],
+      "notes": "Mismo nodo que en II2. Valida PN cliente y cantidad/unidad. Pasa a ERROR si algún campo no cuadra."
+    },
+    {
+      "parameters": {
+        "jsCode": "// VERBEX · II3 · R07 · Verificar cliente registrado\nconst CLIENTES_REGISTRADOS = ['STRA-001', 'KAIRO-001', 'KAIRO-002', 'HELI-001', 'VECT-001'];\n\nconst po = JSON.parse(JSON.stringify($input.item.json));\nconst alertas = [...(po.alertas || [])];\n\nconst codErp = po.cliente?.codigo_erp;\nif (!codErp || !CLIENTES_REGISTRADOS.includes(codErp)) {\n  alertas.push(`R07: cliente no registrado (codigo_erp: ${codErp || 'null'}). Pipeline continúa con flag.`);\n  if (po.estado_normalizacion === 'COMPLETO') {\n    po.estado_normalizacion = 'PARCIAL';\n  }\n  po.cliente_no_registrado = true;\n} else {\n  po.cliente_no_registrado = false;\n}\n\npo.alertas = alertas;\nreturn [{ json: po }];"
+      },
+      "id": "6707d3a9-35c7-42a7-a4c5-f77885e21b0d",
+      "name": "R07 · Verificar cliente registrado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        704,
+        -48
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// VERBEX · II3 · R01 + R02 · Aplicar urgencia\nconst po = JSON.parse(JSON.stringify($input.item.json));\nconst alertas = [...(po.alertas || [])];\n\nconst hoy = new Date();\nhoy.setHours(0, 0, 0, 0);\n\nlet prioridadGlobal = 'NORMAL';\n\nif (po.aog) {\n  prioridadGlobal = 'AOG';\n  alertas.push('R01: AOG detectado, prioridad escalada a AOG');\n}\n\nfor (const linea of po.lineas) {\n  if (po.aog) {\n    linea.prioridad = 'AOG';\n    continue;\n  }\n  if (linea.fecha_entrega_requerida) {\n    const fechaEntrega = new Date(linea.fecha_entrega_requerida);\n    const diffDias = Math.ceil((fechaEntrega - hoy) / (1000 * 60 * 60 * 24));\n    if (diffDias <= 7 && diffDias >= 0) {\n      linea.prioridad = 'PRIORITARIO';\n      if (prioridadGlobal === 'NORMAL') prioridadGlobal = 'PRIORITARIO';\n      alertas.push(`R02: línea ${linea.linea_id} a ${diffDias} días, prioridad PRIORITARIO`);\n    }\n  }\n}\n\npo.prioridad_calculada = prioridadGlobal;\npo.alertas = alertas;\nreturn [{ json: po }];"
+      },
+      "id": "1ca29256-766e-423c-9096-48ca921ec71e",
+      "name": "R01 + R02 · Aplicar urgencia",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        928,
+        -48
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// VERBEX · II3 · R05 + R06 · Asignar certificaciones\nconst po = JSON.parse(JSON.stringify($input.item.json));\n\nfor (const linea of po.lineas) {\n  const docs = [];\n  if (linea.requiere_coc) docs.push('CoC');\n  if (linea.requiere_easa_form1) docs.push('EASA Form 1');\n  if (docs.length) linea.doc_requerida = docs;\n}\n\nreturn [{ json: po }];"
+      },
+      "id": "5e2dcd1f-1577-423e-83f9-f88182066a22",
+      "name": "R05 + R06 · Asignar certificaciones",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1136,
+        -48
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// VERBEX · II3 · R03 · Aplicar confianza umbral\nconst po = JSON.parse(JSON.stringify($input.item.json));\nconst alertas = [...(po.alertas || [])];\n\nif (typeof po.confianza === 'number' && po.confianza < 0.80) {\n  if (po.estado_normalizacion === 'COMPLETO') {\n    po.estado_normalizacion = 'PARCIAL';\n  }\n  alertas.push(`R03: confianza baja (${po.confianza.toFixed(2)} < 0.80), revisar manualmente`);\n}\n\npo.alertas = alertas;\nreturn [{ json: po }];"
+      },
+      "id": "8922e0d2-8406-464f-8d03-1ac1f73ebd26",
+      "name": "R03 · Aplicar confianza umbral",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1360,
+        -48
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// VERBEX · II3 · R09 · Stub anti-spam\nconst PEDIDOS_YA_PROCESADOS = new Set(['PO-2025-STRA-9999']);\n\nconst po = JSON.parse(JSON.stringify($input.item.json));\nconst alertas = [...(po.alertas || [])];\n\nif (PEDIDOS_YA_PROCESADOS.has(po.numero_pedido)) {\n  alertas.push(`R09: ${po.numero_pedido} ya procesado previamente. Marcado como duplicado, no se reenvía.`);\n  po.duplicado = true;\n} else {\n  po.duplicado = false;\n}\n\npo.alertas = alertas;\nreturn [{ json: po }];"
+      },
+      "id": "4cc4e17e-a1dc-4095-b6bf-5d3998c8a81b",
+      "name": "R09 · Stub anti-spam",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1584,
+        -48
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Trigger · Ejecutar manualmente": {
+      "main": [
+        [
+          {
+            "node": "Construir body API (SOUL + SKILL + few-shot)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Construir body API (SOUL + SKILL + few-shot)": {
+      "main": [
+        [
+          {
+            "node": "Cognitivo · Llamada Claude API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cognitivo · Llamada Claude API": {
+      "main": [
+        [
+          {
+            "node": "Validar JSON LLM (anti-alucinación)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar JSON LLM (anti-alucinación)": {
+      "main": [
+        [
+          {
+            "node": "R04 + R08 · Validar catálogo y cantidades",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "R04 + R08 · Validar catálogo y cantidades": {
+      "main": [
+        [
+          {
+            "node": "R07 · Verificar cliente registrado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "R07 · Verificar cliente registrado": {
+      "main": [
+        [
+          {
+            "node": "R01 + R02 · Aplicar urgencia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "R01 + R02 · Aplicar urgencia": {
+      "main": [
+        [
+          {
+            "node": "R05 + R06 · Asignar certificaciones",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "R05 + R06 · Asignar certificaciones": {
+      "main": [
+        [
+          {
+            "node": "R03 · Aplicar confianza umbral",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "R03 · Aplicar confianza umbral": {
+      "main": [
+        [
+          {
+            "node": "R09 · Stub anti-spam",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "2ba08783-17d1-4fec-8574-88bd20c60734",
+  "meta": {
+    "instanceId": "97a58efc2f63b23d8dbf1f0b5fc14410f5883b222aa192ca69be0eb3cf29326f"
+  },
+  "id": "dIBE8Nn8WK0qd0jM",
+  "tags": []
+}
