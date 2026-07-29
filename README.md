@@ -6,6 +6,33 @@ Skills are self-contained instructions that extend Claude's capabilities for spe
 
 ---
 
+## Quick guide: pick a skill by task
+
+Skim this first if you're not sure which skill applies — it's keyed by what you're trying to do, not by category. Full descriptions are in the tables below.
+
+| I want to...                                                            | Use                                                                              |
+| ------------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
+| Check if an article sounds human enough before publishing              | [`authorship-validator`](skills/content/authorship-validator/)                  |
+| Fix an article until it passes that check                              | [`voice-refiner`](skills/content/voice-refiner/) (depends on `authorship-validator`) |
+| Triage a batch of articles for authorship + substance at a glance      | [`atlas-slop-ai`](skills/content/atlas-slop-ai/)                                 |
+| Edit a LaTeX paper as Markdown and regenerate the `.tex` for submission | [`latex-md-roundtrip`](skills/content/latex-md-roundtrip/)                      |
+| Export a Markdown doc to PDF (with math formulas)                      | [`pdf-export`](skills/content/pdf-export/)                                      |
+| Generate a themed Word/PDF/HTML document                               | [`word-template-gen`](skills/content/word-template-gen/)                        |
+| Add navigable bookmarks to a PDF that only has a printed index         | [`pdf-TOC-bookmarker`](skills/content/pdf-TOC-bookmarker/)                      |
+| Set up or extend a personal Obsidian knowledge base                    | [`karpathy-llm-wiki`](skills/content/karpathy-wiki/karpathy-llm-wiki/) group — see note below |
+| Audit whether an AI agent's output is trustworthy                      | [`fitz-agent-auditor`](skills/dev/fitz-agent-auditor/)                          |
+| Check that a repo's docs still match its code                          | [`repo-reconciler`](skills/dev/repo-reconciler/)                                |
+| Avoid common LLM coding mistakes (scope creep, silent assumptions)     | [`karpathy-guidelines`](skills/dev/karpathy-guidelines/)                        |
+| Force a design checkpoint before Claude writes real code                | [`pseudocode-ladder`](skills/agentic/pseudocode-ladder/)                        |
+| Reverse-engineer an existing repo into a design/decision audit          | [`pseudocode-ladder`](skills/agentic/pseudocode-ladder/) (INVERSO mode)         |
+| Keep a running log of every prompt/response this session               | [`log-turn`](skills/dev/log-turn/)                                              |
+| Tame overly long Opus 5 responses                                       | [`opus5-optim`](skills/dev/opus5-optim/)                                        |
+| Save a structured record of a Claude Code session (`/usage`, scope)     | [`registro-sesion-claude`](skills/agentic/registro-sesion-claude/)              |
+| Write up the reasoning trace of a long session, not just its output    | [`session-cot`](skills/agentic/cot-session/)                                    |
+| Switch Claude Code to MiniMax as the model provider                    | [`setup-minimax`](skills/agentic/setup-minimax/)                                |
+
+---
+
 ## Skills
 
 ### 🛠️ Dev
