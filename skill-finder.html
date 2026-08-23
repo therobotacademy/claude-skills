@@ -327,6 +327,13 @@ const SKILLS = {
     desc: "Generates PDF bookmarks (outline) from a printed table of contents when the PDF has no embedded outline. Computes the printed-page → real-PDF-index offset and writes nested bookmarks with pypdf.",
     path: "skills/content/pdf-TOC-bookmarker/"
   },
+  "md-guide-builder": {
+    name: "md-guide-builder",
+    category: "Content",
+    icon: "doc",
+    desc: "Converts a topic or raw notes into a house-style practical guide: numbered .md (guiding idea, sections, summary table, numbered rules, command cheat sheet) paired with a self-explanatory SVG (COIIAOC palette). In-repo mode numbers into guides/ with the SVG mandatory; anywhere mode writes to the current dir with the SVG offered.",
+    path: "skills/content/md-guide-builder/"
+  },
   "karpathy-llm-wiki": {
     name: "karpathy-llm-wiki",
     category: "Content",
@@ -496,7 +503,8 @@ const TREE = {
       { label: "Check if an article sounds human enough before publishing", result: "authorship-validator" },
       { label: "Fix an article until it passes that check", result: "voice-refiner" },
       { label: "Triage a batch of articles for authorship + substance", result: "atlas-slop-ai" },
-      { label: "Edit a LaTeX paper as Markdown and regenerate the .tex", result: "latex-md-roundtrip" }
+      { label: "Edit a LaTeX paper as Markdown and regenerate the .tex", result: "latex-md-roundtrip" },
+      { label: "Turn a topic or raw notes into a house-style guide (.md + .svg)", result: "md-guide-builder" }
     ]
   },
   docs: {
