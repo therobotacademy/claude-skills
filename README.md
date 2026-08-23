@@ -32,6 +32,7 @@ Skim this first if you're not sure which skill applies — it's keyed by what yo
 | Switch Claude Code to MiniMax as the model provider                    | [`setup-minimax`](skills/agentic/setup-minimax/)                                |
 | Explain a code fragment (function, n8n node, pipeline) as an SVG diagram | [`code-diagram-explainer`](skills/code/code-diagram-explainer/)                |
 | Turn a section of prose (methodology, architecture, process) into a diagram | [`text-to-diagram`](skills/code/text-to-diagram/)                          |
+| Keep Claude from breaking my creative flow during writing/design/build sessions | [`flow`](skills/agentic/flow/)                                             |
 
 ---
 
@@ -86,6 +87,7 @@ Skim this first if you're not sure which skill applies — it's keyed by what yo
 | [`session-cot`](skills/agentic/cot-session/)                       | Reconstructs the reasoning trace of a complex session as a Chain of Thought document — numbered steps with Input / Reasoning / Key inference, plus recurring reasoning patterns. Triggered by "escribe el CoT", "documenta el razonamiento de la sesión", or at the close of long design/architecture sessions. Not a summary of output — a trace of the thinking process. |
 | [`setup-minimax`](skills/agentic/setup-minimax/)                   | Walks a non-technical user through configuring Claude Code to use MiniMax as the model provider — one question at a time, verifies each step, creates the launcher`.bat` and the MCP config for web search. Triggered by "configurar Claude Code con MiniMax", "quiero usar MiniMax", "cambiar a MiniMax-M3".                                                                |
 | [`pseudocode-ladder`](skills/agentic/pseudocode-ladder/)           | 4-level protocol (general logic → classes → function pseudo-code → optional near-Python) inserted before real code, marking each decision as delegable or non-delegable and requiring explicit author sign-off before advancing a level. FORWARD mode plans a new module and persists an Obsidian vault (`docs/design/`) synced with each approved level. INVERSE mode reconstructs the ladder from an existing repo, auditing for undocumented implicit decisions, missing invariants, and boundary violations, with a cheap inventory pass before any deep per-module audit. |
+| [`flow`](skills/agentic/flow/)                                     | Always-on interaction contract for creative work sessions (writing, design, composition, app-building) — detects TOOL / STUCK / WORKSHOP mode each turn and constrains response length, register, and what Claude produces, to protect the human's flow state and sense of authorship. Consulted every turn of a creative session, not just when flow/focus is mentioned; `/flow` re-arms, `/flow off` suspends for the session. |
 
 ### 📊 Code
 
