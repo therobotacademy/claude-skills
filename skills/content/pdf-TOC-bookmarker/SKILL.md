@@ -1,9 +1,8 @@
 ---
 name: pdf-toc-bookmarker
-description: Genera bookmarks (outline/marcadores de navegación) para un PDF a partir de su índice de contenidos impreso, cuando el PDF no trae outline embebido. Extrae el texto de las páginas de "Contents"/"Índice", parsea la jerarquía (Partes > Capítulos > Secciones, o el esquema que tenga el libro), calcula el offset entre número de página impreso y el índice real de página del PDF, y escribe un nuevo PDF con marcadores anidados usando pypdf. Activa este skill cuando el usuario suba un PDF (libro, manual, tesis) y pida "añade bookmarks/marcadores según el índice", "genera el outline a partir del índice de contenidos", "pon marcadores de navegación como en la tabla de contenidos", o cualquier variante que implique convertir un índice impreso en marcadores navegables de PDF. No lo actives para anotaciones/highlights sueltos ni para PDFs que ya traen outline (comprobar primero con reader.outline).
+description: Genera bookmarks (outline/marcadores de navegación) para un PDF que no trae outline embebido. Si el PDF fue generado con el skill pdf-export (Pipeline A, Chrome headless) a partir de un .md fuente, parsea directamente los headings Markdown (#, ##, ###) y los localiza en el PDF — sin necesidad de índice impreso. Si no hay .md fuente, extrae el texto de las páginas de "Contents"/"Índice" impreso, parsea la jerarquía (Partes > Capítulos > Secciones), calcula el offset entre número de página impreso y el índice real de página del PDF, y escribe un nuevo PDF con marcadores anidados usando pypdf. Activa este skill cuando el usuario suba un PDF (libro, manual, tesis, paper) y pida "añade bookmarks/marcadores según el índice", "genera el outline", "pon marcadores de navegación", o cualquier variante que implique convertir un índice (impreso o Markdown) en marcadores navegables de PDF. No lo actives para anotaciones/highlights sueltos ni para PDFs que ya traen outline (comprobar primero con reader.outline).
 license: Proprietary. LICENSE.txt has complete terms
 ---
-
 # PDF TOC → Bookmarks
 
 ## Cuándo se necesita
@@ -18,7 +17,26 @@ r = PdfReader("input.pdf")
 print(bool(r.outline))  # True si ya hay marcadores
 ```
 
-## Procedimiento (5 pasos)
+## Atajo: PDF generado con el skill `pdf-export`
+
+Si el PDF viene de `pdf-export` **Pipeline A** (Chrome headless + KaTeX — el que se usa cuando el documento tiene fórmulas LaTeX, porque Pipeline B/WeasyPrint no las renderiza), **no hace falta parsear nada a mano**: Pipeline A es precisamente el único de los dos pipelines de `pdf-export` que no genera bookmarks (Pipeline B/WeasyPrint ya los genera automáticamente desde los headings HTML). Y como el PDF nace de un `.md` con headings `#`/`##`/`###`, esos headings **son** el índice de contenidos — no hay que adivinarlo ni del texto renderizado ni de una página "Contents" que no existe.
+
+Usar directamente el script empaquetado `examples/build_bookmarks_from_md_source.py`:
+
+```bash
+python build_bookmarks_from_md_source.py <fuente.md> <pdf_generado.pdf> [salida.pdf]
+```
+
+Qué hace:
+
+1. Parsea los headings del `.md` fuente (nivel = número de `#`, normalizado para que el nivel mínimo presente sea 0).
+2. Localiza cada heading en el PDF buscando su texto normalizado, avanzando un cursor de página (los headings aparecen en el mismo orden en el `.md` y en el PDF, así que nunca hay que retroceder).
+3. Construye el outline anidado con pypdf respetando la jerarquía de `#`.
+4. Verifica: cuenta nodos, imprime muestra de páginas, avisa (`AVISO: no se localizo...`) si algún heading no se pudo emparejar (revisar manualmente esos casos — normalmente indica que el heading fue reescrito/roto en el HTML intermedio).
+
+Válido para **cualquier** `.md` exportado con `pdf-export` Pipeline A, no solo para el caso concreto con el que se validó (`DIRICHLET_ENERGY_EDUCATION_PAPER.md`, 18 headings capturados correctamente incluyendo un `####` que un parseo manual del PDF renderizado había pasado por alto — ver commit de referencia). Si el PDF **no** tiene un `.md` fuente disponible (viene de un escaneo, de un tercero, o el `.md` se perdió), usar el procedimiento estándar de más abajo.
+
+## Procedimiento estándar (sin fuente Markdown disponible) — 5 pasos
 
 ### 1. Localizar y extraer las páginas del índice
 
@@ -125,3 +143,18 @@ Si el libro no tiene "Partes" (solo Capítulos y Secciones), usar solo 2 niveles
 - **Confundir número de sección con número de página** en títulos que empiezan por dígitos (p. ej. "1/f Power Scaling", "3D reconstruction..."): el regex de captura de página debe anclarse al **final** de la línea (`\s+(\d+)$`), nunca buscar el primer número.
 - **Runing headers colándose como entradas**: filtrar líneas tipo `^[ivxlc]+\s+Contents$` o `^Contents\s+[ivxlc]+$` antes de parsear.
 - **No comprobar si ya existe outline**: perder tiempo reconstruyendo algo que el PDF ya trae.
+
+## Variante: documento corto SIN página de índice impresa NI `.md` fuente disponible
+
+Papers académicos, informes o exports HTML→PDF cortos (normalmente <15 páginas) a menudo **no tienen ninguna página "Contents"**: los encabezados de sección (`1. Introduction`, `2.1. Subsección`, ...) están incrustados directamente en el cuerpo del texto, mezclados con el contenido. Si **sí** hay un `.md` fuente disponible (típico si el PDF salió de `pdf-export`), usar el atajo de la sección anterior — es estrictamente más fiable, porque un parseo manual del texto ya renderizado puede saltarse subtítulos (p. ej. un `####` perdido entre fórmulas). Este procedimiento manual es el **último recurso**, solo cuando no existe `.md` fuente y tampoco hay TOC impreso:
+
+1. **Confirmar que no hay TOC impreso ni `.md` fuente**: extraer y ojear el texto completo (no solo las primeras páginas) — si con `len(reader.pages) < ~15` y no aparece ningún bloque "Contents"/"Índice", se trata de este caso.
+2. **Volcar el texto completo a un fichero intermedio**, página por página con marcador `=== PAGE N ===`, y leerlo entero (no solo los primeros 500 caracteres — los encabezados de sección pueden aparecer en cualquier punto de la página, y `extract_text()` en PDFs exportados desde HTML/MathML puede intercalar fórmulas entre el título y el resto del párrafo).
+3. **Identificar manualmente los encabezados de sección** por su patrón numérico (`N.`, `N.N.`, `N.N.N.`) al inicio de línea, ignorando números que en realidad son resultados/estadísticas dentro del cuerpo (distinguibles porque no van seguidos de un título en mayúscula/Title Case coherente con las demás secciones).
+4. **No hay offset que calcular**: al no existir paginación impresa independiente, el índice de página real de pypdf (0-based) coincide con la página física en la que aparece cada encabezado — anotar directamente `pdf_page` al leer el volcado.
+5. Construir el outline igual que en el paso 5 del procedimiento estándar (`writer.add_outline_item`), respetando la jerarquía por el número de puntos en la numeración (`N.` = nivel 0, `N.N.` = nivel 1, `N.N.N.` = nivel 2).
+6. Verificación: igual que el procedimiento estándar (contar nodos, revisar árbol, comprobar 3-4 páginas al azar con `extract_text()[:150]`).
+
+Script de referencia QUE DEBE EJECUTAR este skill si el PDF procede de una fuente Markdown: `examples/build_bookmarks_from_md_source.py`
+
+En otro caso, se proporciona el ejemplo `examples/build_bookmarks_no_toc_example.py` (entradas hardcodeadas, sin regex de parseo). Úsalo como plantilla solo si de verdad no hay `.md` fuente — en su momento se usó para `DIRICHLET_ENERGY_EDUCATION_PAPER.pdf` antes de descubrir que sí existía el `.md` fuente, y el parseo manual efectivamente se saltó un heading `####` que el script `build_bookmarks_from_md_source.py` sí capturó correctamente (18 headings vs. 16). Caso real ya resuelto con el atajo Markdown.
