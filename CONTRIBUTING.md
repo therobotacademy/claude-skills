@@ -35,6 +35,7 @@ description: >                # When to trigger + what it does. Be specific.
 | `skills/dev/` | Operate on code, repos, or technical artifacts |
 | `skills/content/` | Produce or validate written content |
 | `skills/agentic/` | Orchestrate multi-step workflows or agent pipelines |
+| `skills/code/` | Generate SVG diagrams explaining code or structured text visually |
 
 ---
 

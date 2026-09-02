@@ -419,6 +419,13 @@ const SKILLS = {
     desc: "Walks a non-technical user through configuring Claude Code to use MiniMax as the model provider — one question at a time, verifies each step.",
     path: "skills/agentic/setup-minimax/"
   },
+  "setup-opencode-local": {
+    name: "setup-opencode-local",
+    category: "Agentic",
+    icon: "robot",
+    desc: "Configures a local LLM (via llama.cpp) with the opencode coding-agent CLI, fully offline and free, step by step on modest GPUs (e.g. RTX 2060).",
+    path: "skills/agentic/setup-opencode-local/"
+  },
   "pseudocode-ladder": {
     name: "pseudocode-ladder",
     category: "Code",
@@ -501,7 +508,8 @@ const TREE = {
       { label: "Set up or maintain an Obsidian vault", next: "obsidian" },
       { label: "Turn code or text into an explanatory diagram", next: "diagram" },
       { label: "Protect my focus during a creative work session", result: "flow" },
-      { label: "Configure my model provider / environment", result: "setup-minimax" }
+      { label: "Configure Claude Code with MiniMax", result: "setup-minimax" },
+      { label: "Set up a free offline local coding agent (opencode + GPU)", result: "setup-opencode-local" }
     ]
   },
   content: {
