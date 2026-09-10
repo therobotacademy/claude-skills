@@ -47,7 +47,7 @@
 
 #### `skill-ingest` (Ingesta bajo demanda desde `./BACKLOG`)
 - **Disparador:** `"ingesta el skill X de BACKLOG"`, `"añade el skill X desde BACKLOG"`, `"incorpora BACKLOG/X"`.
-- **Candidatos listos en `BACKLOG/`:** `compress`, `lesson-from-source`, `md-to-docx-rpa`, `quick-skill-md`.
+- **Candidatos listos en `BACKLOG/`:** `compress`, `lesson-from-source`, `md-to-docx-rpa`.
 - **Pasos autónomos:**
   1. Audita el candidato contra el checklist de `CONTRIBUTING.md` (`SKILL.md`, frontmatter YAML, longitud < 500 líneas, scripts y recursos).
   2. Determina la categoría (`dev`, `content`, `agentic`, `code`); si es ambigua, pregunta con `ask_question`.
@@ -111,6 +111,14 @@
      </tone_preference>
      ```
 - **Salida:** Respuestas compactas o prompt ajustado.
+
+#### `quick-skill-md`
+- **Disparador:** `"/quick-skill-md"`, `"actualiza quick-skill.md"`, `"regenera la chuleta operativa"`.
+- **Pasos autónomos:**
+  1. Audita el repositorio descubriendo reglas, catálogo de skills, workflows y rutas de entrada/salida.
+  2. Sintetiza la chuleta operativa de 3 secciones (Mapa de decisión rápida, Instrucciones operativas por familia, Invariantes no negociables).
+  3. Comprueba y enlaza rutas de scripts y archivos y escribe `quick-skill.md`.
+- **Salida:** [`quick-skill.md`](quick-skill.md) en la raíz del repositorio.
 
 ---
 

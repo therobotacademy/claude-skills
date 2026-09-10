@@ -398,6 +398,13 @@ const SKILLS = {
     desc: "Applies Anthropic's Opus 5 prompting guidance on response length — keeps answers concise unless depth is requested.",
     path: "skills/dev/opus5-optim/"
   },
+  "quick-skill-md": {
+    name: "quick-skill-md",
+    category: "Dev",
+    icon: "wrench",
+    desc: "Generates or updates an ultra-dense operational cheat sheet (quick-skill.md) at the repository root by dynamically discovering agent directives, local skills, workflows, and invariants.",
+    path: "skills/dev/quick-skill-md/"
+  },
   "registro-sesion-claude": {
     name: "registro-sesion-claude",
     category: "Agentic",
@@ -548,7 +555,8 @@ const TREE = {
       { label: "Whether a repo's docs still match its code", result: "repo-reconciler" },
       { label: "How Claude approaches coding tasks in general", result: "karpathy-guidelines" },
       { label: "Force a design checkpoint before Claude writes real code", result: "pseudocode-ladder" },
-      { label: "Reverse-engineer an existing repo's implicit decisions", result: "pseudocode-ladder" }
+      { label: "Reverse-engineer an existing repo's implicit decisions", result: "pseudocode-ladder" },
+      { label: "Generate an operational cheat sheet (quick-skill.md) for the repo", result: "quick-skill-md" }
     ]
   },
   session: {

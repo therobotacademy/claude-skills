@@ -39,6 +39,7 @@ Skim this first if you're not sure which skill applies — it's keyed by what yo
 | Turn a section of prose (methodology, architecture, process) into a diagram | [`text-to-diagram`](skills/code/text-to-diagram/)                          |
 | Keep Claude from breaking my creative flow during writing/design/build sessions | [`flow`](skills/agentic/flow/)                                             |
 | Migrate or adapt a repo's `CLAUDE.md` to `AGENTS.md` for Antigravity & multi-agent setups | [`claude-to-agents-md`](skills/agentic/claude-to-agents-md/) |
+| Audit a repo's rules/skills and generate an operational cheat sheet (`quick-skill.md`) | [`quick-skill-md`](skills/dev/quick-skill-md/) |
 
 ---
 
@@ -54,6 +55,7 @@ Skim this first if you're not sure which skill applies — it's keyed by what yo
 | [`log-turn`](skills/dev/log-turn/)                       | Automatically appends every conversation turn to`sessions/today-LOG.md` in a structured `## Prompt N: <Title>` / `## Response N` format. Always active by default; switches to on-demand mode only if the user explicitly requests it in the current session.          |
 | [`karpathy-guidelines`](skills/dev/karpathy-guidelines/) | Behavioral guidelines to reduce common LLM coding mistakes, derived from Andrej Karpathy's observations — surface assumptions, keep changes minimal and surgical, and define verifiable success criteria before looping.                                              |
 | [`opus5-optim`](skills/dev/opus5-optim/)                 | Applies Anthropic's official Opus 5 prompting guidance on response length — keeps direct answers concise and high-level unless depth is requested, and inserts a`<tone_preference>` reminder near the end of long system prompts.                                     |
+| [`quick-skill-md`](skills/dev/quick-skill-md/)           | Generates or updates an ultra-dense operational cheat sheet (`quick-skill.md`) at the repository root by dynamically discovering agent directives, local skills, workflows, and non-negotiable invariants.                                                            |
 
 ### ✍️ Content
 
