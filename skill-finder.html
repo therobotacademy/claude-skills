@@ -83,9 +83,9 @@
   section.view { display: none; }
   section.view.active { display: block; }
 
-  /* ---- Browse (flat) view ---- */
+  /* ---- Browse view controls & filters ---- */
   .search-row {
-    margin-bottom: 1.25rem;
+    margin-bottom: 0.85rem;
   }
   .search-row input {
     width: 100%;
@@ -94,6 +94,71 @@
     border-radius: 10px;
     border: 1px solid var(--border);
     background: var(--panel);
+    color: var(--text);
+  }
+  .browse-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.35rem;
+    flex-wrap: wrap;
+  }
+  .view-layout-toggle {
+    display: inline-flex;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 2px;
+    gap: 2px;
+  }
+  .layout-btn {
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    padding: 0.32rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: background 0.15s, color 0.15s;
+  }
+  .layout-btn svg { width: 14px; height: 14px; flex: none; }
+  .layout-btn.active {
+    background: var(--panel);
+    color: var(--text);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  }
+  .layout-btn:not(.active):hover {
+    color: var(--text);
+  }
+  .category-filters {
+    display: flex;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .cat-filter-btn {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--muted);
+    padding: 0.28rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .cat-filter-btn.active {
+    background: var(--accent);
+    color: var(--accent-text);
+    border-color: var(--accent);
+    font-weight: 500;
+  }
+  .cat-filter-btn:not(.active):hover {
+    border-color: var(--accent);
     color: var(--text);
   }
   .category-block { margin-bottom: 1.75rem; }
@@ -113,6 +178,31 @@
     margin-bottom: 0.6rem;
     box-shadow: var(--shadow);
   }
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.35rem;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.12rem 0.45rem;
+    border-radius: 6px;
+    font-size: 0.73rem;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+  .badge-cat {
+    background: var(--code-bg);
+    color: var(--accent);
+    border: 1px solid var(--border);
+  }
+  .badge-date {
+    color: var(--muted);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.73rem;
+  }
   .skill-card h3 {
     margin: 0 0 0.3rem;
     font-size: 1rem;
@@ -130,7 +220,15 @@
     border-radius: 6px;
     font-size: 0.8rem;
   }
-  .skill-card.hidden { display: none; }
+  .empty-state {
+    padding: 2.5rem 1rem;
+    text-align: center;
+    color: var(--muted);
+    background: var(--panel);
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    margin: 1rem 0;
+  }
 
   /* ---- Tree view ---- */
   .breadcrumbs {
@@ -242,6 +340,25 @@
     <div class="search-row">
       <input id="search" type="text" placeholder="Search skills by name or keyword…" autocomplete="off" />
     </div>
+    <div class="browse-controls">
+      <div class="view-layout-toggle" role="group" aria-label="Layout view">
+        <button class="layout-btn active" data-layout="flat" title="List sorted by newest first">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Recientes
+        </button>
+        <button class="layout-btn" data-layout="grouped" title="Grouped by category">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          Por Categoría
+        </button>
+      </div>
+      <div class="category-filters" role="group" aria-label="Category filter">
+        <button class="cat-filter-btn active" data-category="all">Todas</button>
+        <button class="cat-filter-btn" data-category="Content">Content</button>
+        <button class="cat-filter-btn" data-category="Dev">Dev</button>
+        <button class="cat-filter-btn" data-category="Agentic">Agentic</button>
+        <button class="cat-filter-btn" data-category="Code">Code</button>
+      </div>
+    </div>
     <div id="categories"></div>
   </section>
 
@@ -282,6 +399,7 @@ const SKILLS = {
   "authorship-validator": {
     name: "authorship-validator",
     category: "Content",
+    date: "2026-05-15",
     icon: "pen",
     desc: "Validates human authorship of an article before publishing using the VIDAL framework (VIVO / INTERVENIDO / DELEGADO / GHOST). Detects friction signals vs. LLM homogeneity and produces specific rewrite recommendations.",
     path: "skills/content/authorship-validator/"
@@ -289,6 +407,7 @@ const SKILLS = {
   "voice-refiner": {
     name: "voice-refiner",
     category: "Content",
+    date: "2026-05-15",
     icon: "pen",
     desc: "Iteratively refines an article until it reaches ≥85% human authorship confidence and ≤2 AI-flagged phrases. Depends on authorship-validator.",
     path: "skills/content/voice-refiner/"
@@ -296,6 +415,7 @@ const SKILLS = {
   "atlas-slop-ai": {
     name: "atlas-slop-ai",
     category: "Content",
+    date: "2026-05-10",
     icon: "pen",
     desc: "Classifies editorial articles in a 2×2 matrix (authorship × substance) to produce a diagnostic content quality map. Digest mode for batches, solo mode for one article.",
     path: "skills/content/atlas-slop-ai/"
@@ -303,6 +423,7 @@ const SKILLS = {
   "latex-md-roundtrip": {
     name: "latex-md-roundtrip",
     category: "Content",
+    date: "2026-05-01",
     icon: "doc",
     desc: "Round-trip-safe pipeline for editing a LaTeX paper in Markdown and regenerating the LaTeX target ready for upload (Overleaf / arXiv / journal).",
     path: "skills/content/latex-md-roundtrip/"
@@ -310,6 +431,7 @@ const SKILLS = {
   "pdf-export": {
     name: "pdf-export",
     category: "Content",
+    date: "2026-05-23",
     icon: "doc",
     desc: "Exports Markdown documents to PDF via a verified Pandoc (KaTeX) → Chrome headless pipeline. Handles LaTeX formulas, frontmatter, custom CSS, multi-file concatenation.",
     path: "skills/content/pdf-export/"
@@ -317,6 +439,7 @@ const SKILLS = {
   "word-template-gen": {
     name: "word-template-gen",
     category: "Content",
+    date: "2026-06-15",
     icon: "doc",
     desc: "Generates Word (.docx) templates and PDF/HTML renders from a theme catalog (JSON), keeping PDF and Word visually consistent. Includes academico-brj, neutro, moderno themes.",
     path: "skills/content/word-template-gen/"
@@ -324,6 +447,7 @@ const SKILLS = {
   "pdf-TOC-bookmarker": {
     name: "pdf-TOC-bookmarker",
     category: "Content",
+    date: "2026-08-24",
     icon: "doc",
     desc: "Generates PDF bookmarks (outline) from a printed table of contents when the PDF has no embedded outline. Computes the printed-page → real-PDF-index offset and writes nested bookmarks with pypdf.",
     path: "skills/content/pdf-TOC-bookmarker/"
@@ -331,6 +455,7 @@ const SKILLS = {
   "md-guide-builder": {
     name: "md-guide-builder",
     category: "Content",
+    date: "2026-08-23",
     icon: "doc",
     desc: "Converts a topic or raw notes into a house-style practical guide: numbered .md (guiding idea, sections, summary table, numbered rules, command cheat sheet) paired with a self-explanatory SVG (COIIAOC palette). In-repo mode numbers into guides/ with the SVG mandatory; anywhere mode writes to the current dir with the SVG offered.",
     path: "skills/content/md-guide-builder/"
@@ -338,6 +463,7 @@ const SKILLS = {
   "lab-doc-pipeline": {
     name: "lab-doc-pipeline",
     category: "Content",
+    date: "2026-08-23",
     icon: "flask",
     desc: "Four-phase pipeline turning a solved Jupyter lab notebook into class materials: interactive HTML (live sliders), self-contained Word study doc, theoretical Word on conceptual foundations, and a PPTX with presenter notes. The notebook is the canonical source; phases run independently or chained, reusing figures across phases.",
     path: "skills/content/lab-doc-pipeline/"
@@ -345,6 +471,7 @@ const SKILLS = {
   "karpathy-llm-wiki": {
     name: "karpathy-llm-wiki",
     category: "Content",
+    date: "2026-05-20",
     icon: "graph",
     desc: "Builds and maintains a personal LLM-powered knowledge base (raw/ + wiki/). Supports ingest, query, and lint. Part of the karpathy-wiki group.",
     path: "skills/content/karpathy-wiki/karpathy-llm-wiki/"
@@ -352,6 +479,7 @@ const SKILLS = {
   "obsidian-graph-colors": {
     name: "obsidian-graph-colors",
     category: "Content",
+    date: "2026-05-20",
     icon: "graph",
     desc: "Manages color groups in Obsidian's Graph view by reading and writing graph.json. Audits current state, orphan/missing groups, duplicate hex values.",
     path: "skills/content/karpathy-wiki/obsidian-graph-colors/"
@@ -359,6 +487,7 @@ const SKILLS = {
   "obsidian-vault-builder": {
     name: "obsidian-vault-builder",
     category: "Content",
+    date: "2026-05-20",
     icon: "graph",
     desc: "Creates and configures a complete Obsidian vault (5 .obsidian/ JSON files) without opening Obsidian. Bootstrap templates, plugin toggling, layout regeneration.",
     path: "skills/content/karpathy-wiki/obsidian-vault-builder/"
@@ -366,6 +495,7 @@ const SKILLS = {
   "repo-reconciler": {
     name: "repo-reconciler",
     category: "Dev",
+    date: "2026-04-20",
     icon: "wrench",
     desc: "Audits a repository for inconsistencies between code and documentation — undocumented features, stale README sections, broken examples, version drift. Generates ready-to-apply patches.",
     path: "skills/dev/repo-reconciler/"
@@ -373,6 +503,7 @@ const SKILLS = {
   "fitz-agent-auditor": {
     name: "fitz-agent-auditor",
     category: "Dev",
+    date: "2026-04-15",
     icon: "wrench",
     desc: "Forensic analysis of AI agent outputs using the FITZ taxonomy (SALUDABLE / ALUCINACIÓN / INYECCIÓN / DRIFT). Produces a verdict and a recommendation to prevent recurrence.",
     path: "skills/dev/fitz-agent-auditor/"
@@ -380,6 +511,7 @@ const SKILLS = {
   "log-turn": {
     name: "log-turn",
     category: "Dev",
+    date: "2026-06-29",
     icon: "wrench",
     desc: "Automatically appends every conversation turn to sessions/today-LOG.md in a structured Prompt/Response format. Active by default.",
     path: "skills/dev/log-turn/"
@@ -387,6 +519,7 @@ const SKILLS = {
   "karpathy-guidelines": {
     name: "karpathy-guidelines",
     category: "Dev",
+    date: "2026-08-10",
     icon: "wrench",
     desc: "Behavioral guidelines to reduce common LLM coding mistakes — surface assumptions, keep changes minimal and surgical, define verifiable success criteria before looping.",
     path: "skills/dev/karpathy-guidelines/"
@@ -394,6 +527,7 @@ const SKILLS = {
   "opus5-optim": {
     name: "opus5-optim",
     category: "Dev",
+    date: "2026-08-15",
     icon: "wrench",
     desc: "Applies Anthropic's Opus 5 prompting guidance on response length — keeps answers concise unless depth is requested.",
     path: "skills/dev/opus5-optim/"
@@ -401,6 +535,7 @@ const SKILLS = {
   "quick-skill-md": {
     name: "quick-skill-md",
     category: "Dev",
+    date: "2026-09-10",
     icon: "wrench",
     desc: "Generates or updates an ultra-dense operational cheat sheet (quick-skill.md) at the repository root by dynamically discovering agent directives, local skills, workflows, and invariants.",
     path: "skills/dev/quick-skill-md/"
@@ -408,6 +543,7 @@ const SKILLS = {
   "registro-sesion-claude": {
     name: "registro-sesion-claude",
     category: "Agentic",
+    date: "2026-06-20",
     icon: "robot",
     desc: "Captures metrics and scope of a Claude Code session into a structured Markdown file (USAGE.md or sessions/{date}-{slug}.md). Triggered by pasting /usage output.",
     path: "skills/agentic/registro-sesion-claude/"
@@ -415,6 +551,7 @@ const SKILLS = {
   "session-cot": {
     name: "session-cot",
     category: "Agentic",
+    date: "2026-06-20",
     icon: "robot",
     desc: "Reconstructs the reasoning trace of a complex session as a Chain of Thought document — numbered steps with Input / Reasoning / Key inference.",
     path: "skills/agentic/cot-session/"
@@ -422,6 +559,7 @@ const SKILLS = {
   "setup-minimax": {
     name: "setup-minimax",
     category: "Agentic",
+    date: "2026-08-05",
     icon: "plug",
     desc: "Walks a non-technical user through configuring Claude Code to use MiniMax as the model provider — one question at a time, verifies each step.",
     path: "skills/agentic/setup-minimax/"
@@ -429,6 +567,7 @@ const SKILLS = {
   "setup-opencode-local": {
     name: "setup-opencode-local",
     category: "Agentic",
+    date: "2026-09-02",
     icon: "robot",
     desc: "Configures a local LLM (via llama.cpp) with the opencode coding-agent CLI, fully offline and free, step by step on modest GPUs (e.g. RTX 2060).",
     path: "skills/agentic/setup-opencode-local/"
@@ -436,6 +575,7 @@ const SKILLS = {
   "pseudocode-ladder": {
     name: "pseudocode-ladder",
     category: "Code",
+    date: "2026-08-20",
     icon: "ladder",
     desc: "4-level protocol (logic → classes → function pseudo-code → near-Python) before real code is written, gating on explicit sign-off for non-delegable decisions. INVERSO mode audits an existing repo the same way.",
     path: "skills/code/pseudocode-ladder/"
@@ -443,6 +583,7 @@ const SKILLS = {
   "code-diagram-explainer": {
     name: "code-diagram-explainer",
     category: "Code",
+    date: "2026-08-22",
     icon: "diagram",
     desc: "Generates inline SVG diagrams explaining a code fragment — n8n nodes, functions, pipelines, classes — with literal pseudo-code from source, control flow with ✓/✗ branches, and didactic click-to-ask annotations.",
     path: "skills/code/code-diagram-explainer/"
@@ -450,6 +591,7 @@ const SKILLS = {
   "text-to-diagram": {
     name: "text-to-diagram",
     category: "Code",
+    date: "2026-08-22",
     icon: "diagram",
     desc: "Converts a section of structured text (methodology, process, architecture, conceptual framework) into an SVG diagram meant to replace the text, not decorate it — readable without the original prose.",
     path: "skills/code/text-to-diagram/"
@@ -457,6 +599,7 @@ const SKILLS = {
   "flow": {
     name: "flow",
     category: "Agentic",
+    date: "2026-08-23",
     icon: "wave",
     desc: "Always-on interaction contract for creative work sessions — detects TOOL / STUCK / WORKSHOP mode every turn and constrains response length, register, and what Claude produces, to protect the human's flow state and sense of authorship. /flow re-arms, /flow off suspends for the session.",
     path: "skills/agentic/flow/"
@@ -464,6 +607,7 @@ const SKILLS = {
   "claude-to-agents-md": {
     name: "claude-to-agents-md",
     category: "Agentic",
+    date: "2026-09-10",
     icon: "robot",
     desc: "Migrates and adapts a project's instructions from CLAUDE.md to a canonical, Antigravity-optimized AGENTS.md following standard multi-agent execution conventions, tool definitions, invariants, and Definition of Done.",
     path: "skills/agentic/claude-to-agents-md/"
@@ -474,38 +618,108 @@ const CATEGORY_ORDER = ["Content", "Dev", "Agentic", "Code"];
 const CATEGORY_ICON = { Content: "pen", Dev: "wrench", Agentic: "robot", Code: "diagram" };
 
 /* ---------------------------------------------------------------------
-   Browse view
+   State & Browse view rendering engine
 --------------------------------------------------------------------- */
-function renderCategories(filter = "") {
-  const root = document.getElementById("categories");
-  root.innerHTML = "";
-  const q = filter.trim().toLowerCase();
+let currentViewLayout = "flat";
+let currentCategoryFilter = "all";
+let currentSearchQuery = "";
 
-  CATEGORY_ORDER.forEach(cat => {
-    const entries = Object.values(SKILLS).filter(s => s.category === cat);
-    const block = document.createElement("div");
-    block.className = "category-block";
-
-    const title = document.createElement("div");
-    title.className = "category-title";
-    title.innerHTML = `${iconSvg(CATEGORY_ICON[cat])}<span>${cat}</span>`;
-    block.appendChild(title);
-
-    let visibleCount = 0;
-    entries.forEach(s => {
-      const matches = !q || s.name.toLowerCase().includes(q) || s.desc.toLowerCase().includes(q);
-      if (matches) visibleCount++;
-      const card = document.createElement("div");
-      card.className = "skill-card" + (matches ? "" : " hidden");
-      card.innerHTML = `<h3>${s.name}</h3><p>${s.desc}</p><code class="path">${s.path}</code>`;
-      block.appendChild(card);
-    });
-
-    if (visibleCount > 0) root.appendChild(block);
-  });
+function sortChronological(a, b) {
+  return b.date.localeCompare(a.date) || a.name.localeCompare(b.name);
 }
 
-document.getElementById("search").addEventListener("input", e => renderCategories(e.target.value));
+function createSkillCard(s) {
+  const card = document.createElement("div");
+  card.className = "skill-card";
+  card.innerHTML = `
+    <div class="card-meta">
+      <span class="badge badge-cat">${s.category}</span>
+      <span class="badge badge-date">${s.date}</span>
+    </div>
+    <h3>${s.name}</h3>
+    <p>${s.desc}</p>
+    <code class="path">${s.path}</code>
+  `;
+  return card;
+}
+
+function renderBrowse() {
+  const root = document.getElementById("categories");
+  root.innerHTML = "";
+  const q = currentSearchQuery.trim().toLowerCase();
+
+  const matchesSearch = s => !q || s.name.toLowerCase().includes(q) || s.desc.toLowerCase().includes(q);
+  const matchesCat = s => currentCategoryFilter === "all" || s.category === currentCategoryFilter;
+
+  if (currentViewLayout === "flat") {
+    const entries = Object.values(SKILLS)
+      .filter(s => matchesCat(s) && matchesSearch(s))
+      .sort(sortChronological);
+
+    if (entries.length === 0) {
+      root.innerHTML = `<div class="empty-state">No skills found matching your filters.</div>`;
+      return;
+    }
+
+    entries.forEach(s => {
+      root.appendChild(createSkillCard(s));
+    });
+  } else {
+    // Grouped by category layout
+    let totalVisible = 0;
+    CATEGORY_ORDER.forEach(cat => {
+      if (currentCategoryFilter !== "all" && currentCategoryFilter !== cat) return;
+
+      const entries = Object.values(SKILLS)
+        .filter(s => s.category === cat && matchesSearch(s))
+        .sort(sortChronological);
+
+      if (entries.length > 0) {
+        totalVisible += entries.length;
+        const block = document.createElement("div");
+        block.className = "category-block";
+
+        const title = document.createElement("div");
+        title.className = "category-title";
+        title.innerHTML = `${iconSvg(CATEGORY_ICON[cat])}<span>${cat}</span>`;
+        block.appendChild(title);
+
+        entries.forEach(s => {
+          block.appendChild(createSkillCard(s));
+        });
+
+        root.appendChild(block);
+      }
+    });
+
+    if (totalVisible === 0) {
+      root.innerHTML = `<div class="empty-state">No skills found matching your filters.</div>`;
+    }
+  }
+}
+
+document.getElementById("search").addEventListener("input", e => {
+  currentSearchQuery = e.target.value;
+  renderBrowse();
+});
+
+document.querySelectorAll(".layout-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".layout-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentViewLayout = btn.dataset.layout;
+    renderBrowse();
+  });
+});
+
+document.querySelectorAll(".cat-filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".cat-filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentCategoryFilter = btn.dataset.category;
+    renderBrowse();
+  });
+});
 
 /* ---------------------------------------------------------------------
    Guided decision tree
@@ -669,7 +883,7 @@ document.querySelectorAll(".mode-btn").forEach(btn => {
   });
 });
 
-renderCategories();
+renderBrowse();
 </script>
 </body>
 </html>
