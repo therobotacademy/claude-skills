@@ -453,6 +453,13 @@ const SKILLS = {
     icon: "wave",
     desc: "Always-on interaction contract for creative work sessions — detects TOOL / STUCK / WORKSHOP mode every turn and constrains response length, register, and what Claude produces, to protect the human's flow state and sense of authorship. /flow re-arms, /flow off suspends for the session.",
     path: "skills/agentic/flow/"
+  },
+  "claude-to-agents-md": {
+    name: "claude-to-agents-md",
+    category: "Agentic",
+    icon: "robot",
+    desc: "Migrates and adapts a project's instructions from CLAUDE.md to a canonical, Antigravity-optimized AGENTS.md following standard multi-agent execution conventions, tool definitions, invariants, and Definition of Done.",
+    path: "skills/agentic/claude-to-agents-md/"
   }
 };
 
@@ -551,7 +558,8 @@ const TREE = {
       { label: "Keep a running log of every prompt/response", result: "log-turn" },
       { label: "Shorten overly long Opus 5 responses", result: "opus5-optim" },
       { label: "Save a structured record for later (e.g. /usage)", result: "registro-sesion-claude" },
-      { label: "Write up the reasoning trace, not just the output", result: "session-cot" }
+      { label: "Write up the reasoning trace, not just the output", result: "session-cot" },
+      { label: "Migrate or adapt CLAUDE.md to AGENTS.md for Antigravity", result: "claude-to-agents-md" }
     ]
   },
   obsidian: {

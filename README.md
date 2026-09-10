@@ -38,6 +38,7 @@ Skim this first if you're not sure which skill applies — it's keyed by what yo
 | Explain a code fragment (function, n8n node, pipeline) as an SVG diagram | [`code-diagram-explainer`](skills/code/code-diagram-explainer/)                |
 | Turn a section of prose (methodology, architecture, process) into a diagram | [`text-to-diagram`](skills/code/text-to-diagram/)                          |
 | Keep Claude from breaking my creative flow during writing/design/build sessions | [`flow`](skills/agentic/flow/)                                             |
+| Migrate or adapt a repo's `CLAUDE.md` to `AGENTS.md` for Antigravity & multi-agent setups | [`claude-to-agents-md`](skills/agentic/claude-to-agents-md/) |
 
 ---
 
@@ -95,6 +96,7 @@ Skim this first if you're not sure which skill applies — it's keyed by what yo
 | [`setup-minimax`](skills/agentic/setup-minimax/)                   | Walks a non-technical user through configuring Claude Code to use MiniMax as the model provider — one question at a time, verifies each step, creates the launcher`.bat` and the MCP config for web search. Triggered by "configurar Claude Code con MiniMax", "quiero usar MiniMax", "cambiar a MiniMax-M3".                                                                |
 | [`setup-opencode-local`](skills/agentic/setup-opencode-local/)     | Walks a non-technical user through configuring a local LLM (Qwen2.5-Coder via llama.cpp) with the `opencode` coding-agent CLI — 100% offline, free, and tuned for modest GPUs (e.g., RTX 2060 with 6–8 GB VRAM). Detects VRAM, guides installation, configures `opencode.json`, and verifies execution with dual editing tests.                                      |
 | [`flow`](skills/agentic/flow/)                                     | Always-on interaction contract for creative work sessions (writing, design, composition, app-building) — detects TOOL / STUCK / WORKSHOP mode each turn and constrains response length, register, and what Claude produces, to protect the human's flow state and sense of authorship. Consulted every turn of a creative session, not just when flow/focus is mentioned; `/flow` re-arms, `/flow off` suspends for the session. |
+| [`claude-to-agents-md`](skills/agentic/claude-to-agents-md/)       | Migrates and adapts a project's instructions from `CLAUDE.md` to a canonical, Antigravity-optimized `AGENTS.md` following standard multi-agent execution conventions, tool definitions, invariants, and Definition of Done. |
 
 ### 📊 Code
 

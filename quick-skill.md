@@ -11,6 +11,7 @@
 | **Ingestar skill desde BACKLOG** | `"ingesta el skill X de BACKLOG"`, `"añade el skill X desde BACKLOG"` | Carpeta `./BACKLOG/<skill-name>` | Skill integrado en `skills/<category>/`, empaquetado y registrado en README, finder y quick-skill |
 | **Actualizar chuleta operativa** | `"/quick-skill-md"`, `"actualiza quick-skill.md"`, `"regenera la chuleta"` | Repositorio actual y catálogo de skills | [`quick-skill.md`](quick-skill.md) actualizado y sincronizado en la raíz |
 | **Sincronizar Skill Finder** | `"actualiza skill-finder.html"`, `"sincroniza el skill finder"` | Catálogo de skills en `skills/` | [`skill-finder.html`](skill-finder.html) actualizado con nuevos skills, iconos y rutas |
+| **Migrar CLAUDE.md a AGENTS.md** | `"/claude-to-agents-md"`, `"migra CLAUDE.md a AGENTS.md"` | Archivo `CLAUDE.md` del proyecto | [`AGENTS.md`](AGENTS.md) canónico optimizado para Antigravity y multi-agente |
 | **Alinear docs y código** | `"reconcilia el repo"`, `"actualiza el README"`, `"sync docs"` | Repositorio local con código y documentación | Informe de discrepancias por severidad + parches aplicados a docs/README |
 | **Auditar fiabilidad de agente** | `"audita el agente"`, `"fitz esto"`, `"¿alucina el agente?"` | Respuesta o traza textual de un agente LLM | Veredicto FITZ (`SALUDABLE`, `ALUCINACIÓN`, `INYECCIÓN`, `DRIFT`) + señales + acción preventiva |
 | **Registrar turnos de chat** | `"Vuelca esto al log"`, `"Log this turn"` *(o automático)* | Turnos de conversación de la sesión | Bloques `## Prompt N` / `## Response N` añadidos a `sessions/today-LOG.md` |
@@ -46,7 +47,7 @@
 
 #### `skill-ingest` (Ingesta bajo demanda desde `./BACKLOG`)
 - **Disparador:** `"ingesta el skill X de BACKLOG"`, `"añade el skill X desde BACKLOG"`, `"incorpora BACKLOG/X"`.
-- **Candidatos listos en `BACKLOG/`:** `claude-to-agents-md`, `compress`, `lesson-from-source`, `md-to-docx-rpa`, `quick-skill-md`.
+- **Candidatos listos en `BACKLOG/`:** `compress`, `lesson-from-source`, `md-to-docx-rpa`, `quick-skill-md`.
 - **Pasos autónomos:**
   1. Audita el candidato contra el checklist de `CONTRIBUTING.md` (`SKILL.md`, frontmatter YAML, longitud < 500 líneas, scripts y recursos).
   2. Determina la categoría (`dev`, `content`, `agentic`, `code`); si es ambigua, pregunta con `ask_question`.
@@ -263,6 +264,15 @@
 #### `setup-minimax` & `setup-opencode-local`
 - **Disparador:** `"configurar Claude Code con MiniMax"`, `"montar opencode local"`.
 - **Salida:** Entornos de ejecución asistida configurados (remoto MiniMax o local privado en GPU con `llama.cpp` + `opencode`).
+
+#### `claude-to-agents-md`
+- **Disparador:** `"/claude-to-agents-md"`, `"migra CLAUDE.md a AGENTS.md"`, `"adapta las instrucciones a Antigravity"`.
+- **Pasos autónomos:**
+  1. Audita el `CLAUDE.md` original extrayendo rol, modelo de carpetas, convenciones, estilo visual e invariantes.
+  2. Detecta el entorno (OS Windows/PowerShell, herramientas nativas sin `cd`, rutas directas a skills).
+  3. Redacta el `AGENTS.md` canónico en 5 secciones preservando íntegro el `CLAUDE.md` fuente.
+  4. Valida enlaces clickables `file:///` con barras normales y comprueba criterios de aceptación (DoD).
+- **Salida:** [`AGENTS.md`](AGENTS.md) generado en la raíz del repositorio.
 
 ---
 
