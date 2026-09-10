@@ -10,6 +10,8 @@ Skills are self-contained instructions that extend Claude's capabilities for spe
 
 Skim this first if you're not sure which skill applies — it's keyed by what you're trying to do, not by category. Full descriptions are in the tables below.
 
+> ⚡ **Operaciones rápidas:** Consulta [`quick-skill.md`](quick-skill.md) para una chuleta operativa sin preámbulos: qué pedir, qué dar de entrada, qué genera el agente y las reglas no negociables del repositorio.
+
 | I want to...                                                            | Use                                                                              |
 | ------------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
 | Check if an article sounds human enough before publishing              | [`authorship-validator`](skills/content/authorship-validator/)                  |
