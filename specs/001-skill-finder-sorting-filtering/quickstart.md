@@ -62,8 +62,9 @@
 1. Select the **"Dev"** category filter pill.
 2. In the search box, type: `karpathy`
 3. **Verify**:
-   - Only `karpathy-guidelines` and `karpathy-llm-wiki` appear.
-   - Clear the search box: all Dev skills re-appear.
+   - Only `karpathy-guidelines` appears (since `karpathy-llm-wiki` belongs to the Content category).
+   - Click "Todas": both `karpathy-guidelines` and `karpathy-llm-wiki` appear.
+   - Clear the search box: all skills re-appear according to the active category filter.
 
 ---
 

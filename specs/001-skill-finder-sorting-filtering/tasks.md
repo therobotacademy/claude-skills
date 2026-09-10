@@ -6,8 +6,8 @@
 
 **Purpose**: Verify baseline state and add shared CSS styling for controls and badges
 
-- [ ] T001 Inspect current markup and DOM structure in `skill-finder.html`
-- [ ] T002 Add CSS layout and styling for toolbar controls (`.browse-controls`, `.view-layout-toggle`, `.layout-btn`, `.category-filters`, `.cat-filter-btn`, `.card-meta`, `.badge`, `.badge-cat`, `.badge-date`, `.empty-state`) in `skill-finder.html`
+- [x] T001 Inspect current markup and DOM structure in `skill-finder.html`
+- [x] T002 Add CSS layout and styling for toolbar controls (`.browse-controls`, `.view-layout-toggle`, `.layout-btn`, `.category-filters`, `.cat-filter-btn`, `.card-meta`, `.badge`, `.badge-cat`, `.badge-date`, `.empty-state`) in `skill-finder.html`
 
 ---
 
@@ -15,8 +15,8 @@
 
 **Purpose**: Core catalog schema expansion and state management prerequisites
 
-- [ ] T003 Update `const SKILLS` catalog dictionary by adding verified `date: "YYYY-MM-DD"` property to all 27 skill entries in `skill-finder.html`
-- [ ] T004 Define runtime state variables (`currentViewLayout`, `currentCategoryFilter`, `currentSearchQuery`) and the chronological comparator function `sortChronological(a, b)` in `skill-finder.html`
+- [x] T003 Update `const SKILLS` catalog dictionary by adding verified `date: "YYYY-MM-DD"` property to all 27 skill entries in `skill-finder.html`
+- [x] T004 Define runtime state variables (`currentViewLayout`, `currentCategoryFilter`, `currentSearchQuery`) and the chronological comparator function `sortChronological(a, b)` in `skill-finder.html`
 
 **Checkpoint**: Catalog data and state management ready — user story implementation can begin.
 
@@ -28,9 +28,9 @@
 
 **Independent Test**: Open `skill-finder.html` in browser; verify skills appear in a single unified list ordered by date descending (newest skills `quick-skill-md` and `claude-to-agents-md` at the top), with category and date tags on each card.
 
-- [ ] T005 [US1] Implement skill card HTML generator rendering category badge (`.badge-cat`) and creation/update date badge (`.badge-date`) alongside title, description, and path in `skill-finder.html`
-- [ ] T006 [US1] Implement flat chronological rendering logic in `renderBrowse()` sorting all matching skills descending by date in `skill-finder.html`
-- [ ] T007 [US1] Connect live search input `#search` to filter cards in real time within the default flat chronological view in `skill-finder.html`
+- [x] T005 [US1] Implement skill card HTML generator rendering category badge (`.badge-cat`) and creation/update date badge (`.badge-date`) alongside title, description, and path in `skill-finder.html`
+- [x] T006 [US1] Implement flat chronological rendering logic in `renderBrowse()` sorting all matching skills descending by date in `skill-finder.html`
+- [x] T007 [US1] Connect live search input `#search` to filter cards in real time within the default flat chronological view in `skill-finder.html`
 
 **Checkpoint**: User Story 1 (MVP) is fully functional and testable independently.
 
@@ -42,9 +42,9 @@
 
 **Independent Test**: Click "Por Categoría" toggle; verify skills are partitioned under category headers (*Content*, *Dev*, *Agentic*, *Code*) and sorted newest first within each section. Click "Recientes" toggle to return to flat view.
 
-- [ ] T008 [US2] Add view layout toggle buttons markup (`.view-layout-toggle` with "Recientes" and "Por Categoría") inside `.browse-controls` in `skill-finder.html`
-- [ ] T009 [US2] Implement category-grouped rendering branch in `renderBrowse()` sorting skills descending by date within each category block in `skill-finder.html`
-- [ ] T010 [US2] Wire click event listeners on `.layout-btn` to update `currentViewLayout`, update active button state, and re-render view in `skill-finder.html`
+- [x] T008 [US2] Add view layout toggle buttons markup (`.view-layout-toggle` with "Recientes" and "Por Categoría") inside `.browse-controls` in `skill-finder.html`
+- [x] T009 [US2] Implement category-grouped rendering branch in `renderBrowse()` sorting skills descending by date within each category block in `skill-finder.html`
+- [x] T010 [US2] Wire click event listeners on `.layout-btn` to update `currentViewLayout`, update active button state, and re-render view in `skill-finder.html`
 
 **Checkpoint**: User Stories 1 and 2 both function independently and integrate seamlessly.
 
@@ -56,9 +56,9 @@
 
 **Independent Test**: Click "Agentic" filter pill; verify only Agentic skills are visible in both flat and grouped views. Combine with search to filter within that category. Click "Todas" to reset filter.
 
-- [ ] T011 [US3] Add category filter pills markup (`.category-filters` with buttons: "Todas", "Content", "Dev", "Agentic", "Code") inside `.browse-controls` in `skill-finder.html`
-- [ ] T012 [US3] Implement category filtering logic in `getFilteredSkills()` combining `currentCategoryFilter` and `currentSearchQuery` in `skill-finder.html`
-- [ ] T013 [US3] Wire click event listeners on `.cat-filter-btn` to update `currentCategoryFilter`, toggle active pill styling, and re-render view in `skill-finder.html`
+- [x] T011 [US3] Add category filter pills markup (`.category-filters` with buttons: "Todas", "Content", "Dev", "Agentic", "Code") inside `.browse-controls` in `skill-finder.html`
+- [x] T012 [US3] Implement category filtering logic in `getFilteredSkills()` combining `currentCategoryFilter` and `currentSearchQuery` in `skill-finder.html`
+- [x] T013 [US3] Wire click event listeners on `.cat-filter-btn` to update `currentCategoryFilter`, toggle active pill styling, and re-render view in `skill-finder.html`
 
 **Checkpoint**: All three user stories are complete, functional, and testable independently.
 
@@ -68,9 +68,9 @@
 
 **Purpose**: Visual polish, empty states, responsiveness, and non-regression verification
 
-- [ ] T014 Add empty state container displaying friendly "No skills found matching your filters" message when search or category filter matches zero skills in `skill-finder.html`
-- [ ] T015 Verify responsive mobile wrap for toolbar controls and dark/light color contrast of metadata badges in `skill-finder.html`
-- [ ] T016 Execute all 5 verification scenarios from `specs/001-skill-finder-sorting-filtering/quickstart.md` and confirm non-regression of the guided decision tree in `skill-finder.html`
+- [x] T014 Add empty state container displaying friendly "No skills found matching your filters" message when search or category filter matches zero skills in `skill-finder.html`
+- [x] T015 Verify responsive mobile wrap for toolbar controls and dark/light color contrast of metadata badges in `skill-finder.html`
+- [x] T016 Execute all 5 verification scenarios from `specs/001-skill-finder-sorting-filtering/quickstart.md` and confirm non-regression of the guided decision tree in `skill-finder.html`
 
 ---
 
