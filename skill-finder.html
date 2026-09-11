@@ -444,6 +444,14 @@ const SKILLS = {
     desc: "Generates Word (.docx) templates and PDF/HTML renders from a theme catalog (JSON), keeping PDF and Word visually consistent. Includes academico-brj, neutro, moderno themes.",
     path: "skills/content/word-template-gen/"
   },
+  "md-to-docx-rpa": {
+    name: "md-to-docx-rpa",
+    category: "Content",
+    date: "2026-09-11",
+    icon: "doc",
+    desc: "Emulates an RPA operator to generate or update corporate Word (.docx) documents and proposals from templates, preserving exact typography (Verdana, Poppins, Segoe UI, Calibri), headers, cover design, and modular tables without falling back to Times New Roman.",
+    path: "skills/content/md-to-docx-rpa/"
+  },
   "pdf-TOC-bookmarker": {
     name: "pdf-TOC-bookmarker",
     category: "Content",
@@ -758,6 +766,7 @@ const TREE = {
     options: [
       { label: "Export a Markdown doc to PDF (with math formulas)", result: "pdf-export" },
       { label: "Generate a themed Word / PDF / HTML document", result: "word-template-gen" },
+      { label: "Generate a corporate Word doc/proposal preserving exact layout & fonts (RPA)", result: "md-to-docx-rpa" },
       { label: "Add bookmarks to a PDF from its printed index", result: "pdf-TOC-bookmarker" }
     ]
   },

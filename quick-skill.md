@@ -23,6 +23,7 @@
 | **LaTeX ↔ Markdown round-trip** | `"actualiza el LaTeX desde el MD"`, `"regenerate the paper"` | `SOURCE_TEX` (fresco) + `EDIT_MD` (editado) | `OUTPUT_TEX` compilable + `<OUTPUT_TEX>.diff` para revisión |
 | **Exportar Markdown a PDF** | `"exportar a PDF"`, `"genera el PDF"`, `"render PDF"` | Fichero `.md` (con/sin fórmulas KaTeX) | Archivo `.pdf` vía Pandoc + Chrome headless (o WeasyPrint para bookmarks) |
 | **Plantilla Word / PDF por tema** | `"genera una plantilla Word"`, `"renderiza este md con el estilo X"` | Markdown fuente + tema en `themes/*.json` | `reference.docx` / documento `.docx` y `.pdf` estilizados vía `wtg.py` |
+| **Propuesta Word fiel (RPA)** | `"genera la propuesta en Word"`, `"rellena plantilla docx"`, `"md-to-docx-rpa"` | Plantilla `.docx` base + Markdown o datos estructurados | Documento `.docx` con diseño, portada y fuentes exactas (Verdana/Poppins/Segoe) sin Times New Roman |
 | **Incrustar bookmarks a PDF** | `"añade bookmarks según el índice"`, `"genera el outline"` | Archivo `.pdf` + `.md` fuente o índice impreso | Nuevo PDF con jerarquía de marcadores navegables incrustados vía `pypdf` |
 | **Guía práctica + Diagrama SVG** | `"haz una guía"`, `"genera una guía md"`, `"/md-guide-builder"` | Tema o notas en bruto | `guides/NN-TIPO-tema.md` con su diagrama autoexplicativo `.svg` (COIIAOC) |
 | **Materiales docentes de lab** | `"convierte el notebook en material docente"`, `"pipeline completo"` | Notebook Jupyter resuelto (`.ipynb`) | Hasta 4 entregables: HTML interactivo, Word estudio, Word teórico, PPTX |
@@ -47,7 +48,7 @@
 
 #### `skill-ingest` (Ingesta bajo demanda desde `./BACKLOG`)
 - **Disparador:** `"ingesta el skill X de BACKLOG"`, `"añade el skill X desde BACKLOG"`, `"incorpora BACKLOG/X"`.
-- **Candidatos listos en `BACKLOG/`:** `compress`, `lesson-from-source`, `md-to-docx-rpa`.
+- **Candidatos listos en `BACKLOG/`:** `compress`, `lesson-from-source`.
 - **Pasos autónomos:**
   1. Audita el candidato contra el checklist de `CONTRIBUTING.md` (`SKILL.md`, frontmatter YAML, longitud < 500 líneas, scripts y recursos).
   2. Determina la categoría (`dev`, `content`, `agentic`, `code`); si es ambigua, pregunta con `ask_question`.
@@ -170,6 +171,16 @@
 - **Motor:** `python skills/content/word-template-gen/wtg.py list|build|render`.
 - **Flujo:** Toma un tema JSON en `themes/` y deriva simétricamente el CSS (HTML/PDF) y los estilos de `reference.docx`.
 - **Salida:** Plantilla `.docx` o render final `.docx` y `.pdf`.
+
+#### `md-to-docx-rpa`
+- **Disparador:** `"genera la propuesta en Word"`, `"rellena plantilla docx"`, `"md-to-docx-rpa"`, `"propuesta corporativa word"`.
+- **Motor:** `python skills/content/md-to-docx-rpa/scripts/fill_docx_template.py --output <doc.docx> [opciones]`.
+- **Flujo:**
+  1. Clona la plantilla corporativa base (`templates/plantilla_propuesta_lorem.docx`).
+  2. Parchea preventivamente `word/styles.xml` sustituyendo cualquier `Times New Roman` en `docDefaults` por `Verdana`.
+  3. Inyecta contenido forzando fuentes por fragmento OpenXML (`Calibri` portada, `Segoe UI` H1, `Poppins` H2/tablas-ficha, `Verdana` cuerpo).
+  4. Aplica ritmo vertical estricto (espaciados 3/8 pt, viñetas nativas `numPr`) y saltos de bloque temático ejecutivos.
+- **Salida:** Documento `.docx` que preserva portada, tablas, encabezados dinámicos e identidad visual al 100%.
 
 #### `latex-md-roundtrip`
 - **Disparador:** `"actualiza el LaTeX desde el MD"`, `"regenerate the paper"`, `"verify roundtrip"`.

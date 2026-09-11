@@ -13,6 +13,12 @@ import os
 import sys
 from pathlib import Path
 
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
 
 def package_skill(skill_path: str, output_dir: str = "dist") -> Path:
     skill_dir = Path(skill_path).resolve()
