@@ -1,0 +1,15 @@
+interface:
+  display_name: Obsidian Knowledge Vault
+  short_description: Grafos por dominio desde una URL y sus referencias
+  default_prompt: Usa $build-obsidian-knowledge-vault para ingerir esta URL y sus
+    referencias, adaptar el grafo al dominio y problema, y entregar un vault de Obsidian
+    descargable.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

@@ -500,6 +500,14 @@ const SKILLS = {
     desc: "Creates and configures a complete Obsidian vault (5 .obsidian/ JSON files) without opening Obsidian. Bootstrap templates, plugin toggling, layout regeneration.",
     path: "skills/content/karpathy-wiki/obsidian-vault-builder/"
   },
+  "build-obsidian-knowledge-vault": {
+    name: "build-obsidian-knowledge-vault",
+    category: "Content",
+    date: "2026-09-12",
+    icon: "graph",
+    desc: "Creates a domain-adapted knowledge graph from a primary URL or exported doc, reading first-level references, synthesizing entities and claims with explicit provenance, and delivering an operational downloadable Obsidian vault.",
+    path: "skills/content/build-obsidian-knowledge-vault/"
+  },
   "repo-reconciler": {
     name: "repo-reconciler",
     category: "Dev",
@@ -799,7 +807,8 @@ const TREE = {
     options: [
       { label: "Bootstrap or reconfigure the vault itself (.obsidian/)", result: "obsidian-vault-builder" },
       { label: "Ingest, query, or lint the wiki content", result: "karpathy-llm-wiki" },
-      { label: "Manage Graph view color groups", result: "obsidian-graph-colors" }
+      { label: "Manage Graph view color groups", result: "obsidian-graph-colors" },
+      { label: "Build a domain knowledge graph & vault from a URL and references", result: "build-obsidian-knowledge-vault" }
     ]
   },
   diagram: {

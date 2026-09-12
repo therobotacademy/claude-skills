@@ -28,6 +28,7 @@
 | **Guía práctica + Diagrama SVG** | `"haz una guía"`, `"genera una guía md"`, `"/md-guide-builder"` | Tema o notas en bruto | `guides/NN-TIPO-tema.md` con su diagrama autoexplicativo `.svg` (COIIAOC) |
 | **Materiales docentes de lab** | `"convierte el notebook en material docente"`, `"pipeline completo"` | Notebook Jupyter resuelto (`.ipynb`) | Hasta 4 entregables: HTML interactivo, Word estudio, Word teórico, PPTX |
 | **Ingesta / Consulta Wiki Karpathy**| `"add to wiki"`, `"what do I know about X"`, `"lint wiki"` | Fuentes crudas en `raw/<topic>/` | Artículos en `wiki/<topic>/`, `wiki/index.md` y registro en `wiki/log.md` |
+| **Bóveda y grafo Obsidian desde URL** | `"/build-obsidian-knowledge-vault"`, `"construye un vault desde URL"` | URL o documento fuente + referencias | Vault Obsidian completo en ZIP con notas enlazadas, grafo JSON y alcance |
 | **Colores grafo Obsidian** | `"/graph-colors"`, `"colorear el grafo"`, `"grupos de color"` | Vault con `wiki/.obsidian/graph.json` | Reporte de anomalías + `graph.json` con paleta sincronizada |
 | **Crear Vault Obsidian sin UI** | `"bootstrap vault"`, `"crear vault"`, `"nuevo vault obsidian"` | Directorio destino del vault | Carpeta `.obsidian/` completa con sus 5 ficheros JSON operativos |
 | **Cierre y métricas de sesión** | `"registra la sesión"`, `"documenta esta sesión"`, pegar `/usage` | Salida de `/usage` de Claude Code | `USAGE.md` o `sessions/{fecha}-{slug}.md` con desglose de coste y scope |
@@ -225,6 +226,17 @@
 - **Script:** `python skills/content/karpathy-wiki/obsidian-graph-colors/audit.py` (o `python .claude/skills/obsidian-graph-colors/audit.py` si está instalado).
 - **Acción:** Audita tags huérfanos, sin color o duplicados y sincroniza `graph.json`.
 - **Salida:** `wiki/.obsidian/graph.json` saneado y coloreado.
+
+#### `build-obsidian-knowledge-vault`
+- **Disparador:** `"/build-obsidian-knowledge-vault"`, `"construye un vault desde URL"`, `"crear grafo de conocimiento"`, `"ingerir URL y referencias"`.
+- **Pasos autónomos:**
+  1. Delimita dominio, problema y audiencia desde la URL principal o documento exportado (`00_Inicio/ALCANCE.md`).
+  2. Lee enlaces y referencias sustantivas de primer nivel, deduplica destinos y etiqueta estados reales (`ingested`, `partial`, `blocked`, `unavailable`).
+  3. Modela el grafo conceptual (`references/model.md`) distinguiendo síntesis de fuentes, inferencias y propuestas con evidencia explícita.
+  4. Genera notas Markdown UTF-8 (`[[Nota]]`), carpetas temáticas, `Contexto/CONTEXTO.md` y contratos JSON (`Grafo/ontology.json`, `graph.json`, `sources.json`, `federation.json`).
+  5. Ejecuta `scripts/prepare_federation.py` y valida/empaqueta con `scripts/validate_pack.py VAULT --zip SALIDA.zip`.
+- **Salida:** Archivo ZIP descargable del vault operativo, mapa de entrada y contexto breve reutilizable.
+
 
 ---
 
