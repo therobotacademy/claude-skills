@@ -50,3 +50,7 @@ En una actualización, conservar identidades existentes, registrar cambios de fu
 Guardar el ZIP y los documentos de entrega de forma persistente con las capacidades del entorno; si Library está disponible, seguir su habilidad. La instalación de esta habilidad se gestiona por separado del guardado de los vaults.
 
 Entregar enlace al ZIP, número de notas y relaciones, referencias leídas/parciales/bloqueadas y una breve explicación de la personalización. Si hay huecos, identificarlos. Explicar que el vault conserva conocimiento documental; no crea memoria permanente, embeddings ni carga automática en cada conversación. Para retomar, abrir `CONTEXTO.md`, luego las notas pertinentes y sus evidencias. No prometer haber leído el corpus entero dentro de una sola ventana de contexto.
+
+## Contexto de origen y decisiones de diseño
+
+Para consultar el razonamiento que originó la habilidad, sus decisiones arquitectónicas (caso testigo de IA Generativa «El hueco del post-entrenamiento», separación estricta entre notas de fuentes y notas de afirmaciones, la distinción entre almacenamiento documental vs. ventana de contexto, y la evolución hacia federación v2 y swarm de vaults), consultar [`CONTEXTO_CREACION.md`](CONTEXTO_CREACION.md).

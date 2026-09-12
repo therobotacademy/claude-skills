@@ -235,6 +235,7 @@
   3. Modela el grafo conceptual (`references/model.md`) distinguiendo síntesis de fuentes, inferencias y propuestas con evidencia explícita.
   4. Genera notas Markdown UTF-8 (`[[Nota]]`), carpetas temáticas, `Contexto/CONTEXTO.md` y contratos JSON (`Grafo/ontology.json`, `graph.json`, `sources.json`, `federation.json`).
   5. Ejecuta `scripts/prepare_federation.py` y valida/empaqueta con `scripts/validate_pack.py VAULT --zip SALIDA.zip`.
+- **Contexto de origen y límites:** Documentado en [`CONTEXTO_CREACION.md`](skills/content/build-obsidian-knowledge-vault/CONTEXTO_CREACION.md) (caso testigo de IA Generativa docente «El hueco del post-entrenamiento», extracción WebArchive, separación documental vs memoria de contexto).
 - **Salida:** Archivo ZIP descargable del vault operativo, mapa de entrada y contexto breve reutilizable.
 
 

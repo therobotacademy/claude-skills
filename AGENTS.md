@@ -37,27 +37,33 @@ Cuando el usuario pida *"ingesta el skill X de BACKLOG"*, *"añade el skill X de
 ```
 
 ### Paso 1: Auditoría de calidad del candidato en `./BACKLOG/<skill-name>`
+
 Verificar que la carpeta candidata cumple la especificación de [`CONTRIBUTING.md`](file:///C:/Users/brjap/Documents/__CODE_gpu/(claude-skills/CONTRIBUTING.md):
+
 - [ ] Existe `SKILL.md` obligatorio con frontmatter YAML válido:
   - `name`: en kebab-case, coincidente con el nombre de la carpeta.
   - `description`: explicita cuándo activarlo, qué hace y frases/prompts desencadenantes concretos.
 - [ ] El cuerpo de `SKILL.md` es conciso (< 500 líneas). Si hay contenido extenso, debe modularizarse en `references/`, `scripts/` o `assets/`.
 - [ ] Todos los scripts (`.py`, `.sh`, `.bat`) y recursos referenciados existen dentro de la carpeta del skill.
+- [ ] Si procede por la génesis, complejidad o lecciones aprendidas del skill, se incluye y referencia `CONTEXTO_CREACION.md` para preservar las decisiones de diseño y límites operativos.
 
 ### Paso 2: Determinación de categoría destino
+
 Clasificar el skill en una de las 4 categorías estándar:
-| Categoría | Criterio |
-| :--- | :--- |
-| `skills/dev/` | Opera sobre código, repositorios, linters, auditores técnicos o herramientas de desarrollo. |
-| `skills/content/` | Produce, valida o refina contenido escrito, papers, documentos Word/PDF o pipelines docentes. |
-| `skills/agentic/` | Orquesta flujos multi-paso, control de sesión, contratos de flujo o setup de runtimes de agentes. |
-| `skills/code/` | Genera diagramas SVG explicativos de código o texto estructurado, o protocolos de diseño en pseudocódigo. |
+
+| Categoría          | Criterio                                                                                                     |
+| :------------------ | :----------------------------------------------------------------------------------------------------------- |
+| `skills/dev/`     | Opera sobre código, repositorios, linters, auditores técnicos o herramientas de desarrollo.                |
+| `skills/content/` | Produce, valida o refina contenido escrito, papers, documentos Word/PDF o pipelines docentes.                |
+| `skills/agentic/` | Orquesta flujos multi-paso, control de sesión, contratos de flujo o setup de runtimes de agentes.           |
+| `skills/code/`    | Genera diagramas SVG explicativos de código o texto estructurado, o protocolos de diseño en pseudocódigo. |
 
 > [!IMPORTANT]
 > Si la categoría resulta ambigua o el skill encaja en más de una, **no adivinar silenciosamente**: usar `ask_question` para consultar la preferencia del usuario antes de mover archivos.
 
 ### Paso 3: Traslado a `skills/` y prueba de empaquetado
-1. Mover o copiar la carpeta desde `BACKLOG/<skill-name>` hacia `skills/<category>/<skill-name>/`.
+
+1. Mover la carpeta desde `BACKLOG/<skill-name>` hacia `skills/<category>/<skill-name>/`.
 2. Probar el empaquetado del skill ejecutando:
    ```powershell
    python scripts/package_skill.py skills/<category>/<skill-name>
@@ -67,6 +73,7 @@ Clasificar el skill en una de las 4 categorías estándar:
 ### Paso 4: Actualización obligatoria de índices y catálogo
 
 #### A. Actualizar [`README.md`](file:///C:/Users/brjap/Documents/__CODE_gpu/(claude-skills/README.md)
+
 1. Añadir una fila a la tabla `## Quick guide: pick a skill by task`:
    ```markdown
    | <Acción del usuario> | [`<skill-name>`](skills/<category>/<skill-name>/) |
@@ -74,6 +81,7 @@ Clasificar el skill en una de las 4 categorías estándar:
 2. Añadir una fila a la tabla correspondiente a su categoría (`### 🛠️ Dev`, `### ✍️ Content`, `### 🤖 Agentic`, o `### 📊 Code`).
 
 #### B. Actualizar [`quick-skill.md`](file:///C:/Users/brjap/Documents/__CODE_gpu/(claude-skills/quick-skill.md)
+
 1. **Sección 1 (Mapa de decisión rápida):** Insertar fila comparativa:
    ```markdown
    | **<Entregable deseado>** | `"<prompt 1>"`, `"<prompt 2>"` | <Entrada necesaria> | <Salida generada> |
@@ -84,6 +92,7 @@ Clasificar el skill en una de las 4 categorías estándar:
    - Formato y ubicación del entregable.
 
 #### C. Actualizar [`skill-finder.html`](file:///C:/Users/brjap/Documents/__CODE_gpu/(claude-skills/skill-finder.html)
+
 1. Añadir la entrada al objeto constante `SKILLS` dentro de la etiqueta `<script>`:
    ```javascript
    "<skill-name>": {
@@ -118,6 +127,7 @@ Clasificar el skill en una de las 4 categorías estándar:
 ## 5. Criterios de Aceptación (Definition of Done)
 
 Una tarea de ingesta de skill desde `./BACKLOG` solo se considera terminada cuando:
+
 - [ ] El skill está en `skills/<category>/<skill-name>/` con `SKILL.md` íntegro.
 - [ ] `python scripts/package_skill.py skills/<category>/<skill-name>` ejecuta con éxito.
 - [ ] `README.md` refleja el nuevo skill en su tabla de categoría y en la guía rápida.

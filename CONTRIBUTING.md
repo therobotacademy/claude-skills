@@ -11,6 +11,7 @@ Every skill lives in its own folder:
 ```
 skills/<category>/<skill-name>/
 ├── SKILL.md                  # Required. Contains YAML frontmatter + instructions.
+├── CONTEXTO_CREACION.md      # Optional. Genesis, rationale, design limits & test cases.
 ├── references/               # Optional. Files loaded into context on demand.
 │   ├── some-reference.md
 │   └── ...
@@ -56,6 +57,7 @@ description: >                # When to trigger + what it does. Be specific.
 - [ ] Instructions are unambiguous — no "use your judgment" without criteria
 - [ ] `SKILL.md` body is under 500 lines (use `references/` for overflow)
 - [ ] Supporting files are referenced explicitly from `SKILL.md`
+- [ ] When relevant (complex skills, non-trivial limits or rich history), `CONTEXTO_CREACION.md` documents genesis and design decisions
 - [ ] Tested against at least 2 real inputs before submitting
 
 ---
